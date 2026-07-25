@@ -1,0 +1,177 @@
+Day 1: What is SQL?
+SQL means Structured Query Language.
+It is the language used to talk to a database.
+Think of a database like a big Excel sheet, but much more powerful.
+You use SQL to:
+see data
+add data
+change data
+delete data
+find answers from data
+1) Basic Database Words
+Database
+A database is a place where data is stored.
+Example:
+employee database
+customer database
+sales database
+Table
+A table is like a sheet inside a database.
+Example: employees
+id	name	salary	department
+1	Ravi	50000	IT
+2	Neha	60000	HR
+Row
+A row is one complete record.
+Example:
+1, Ravi, 50000, IT
+Column
+A column is one type of data.
+Example:
+id
+name
+salary
+department
+2) What is DBMS and RDBMS?
+DBMS
+A DBMS is software that helps store and manage data.
+RDBMS
+An RDBMS stores data in tables and shows relationships between tables.
+Examples of RDBMS:
+MySQL
+PostgreSQL
+SQL Server
+Oracle
+For interviews, remember this simple line:
+SQL is used in RDBMS to work with tables and data.
+3) SQL Command Types
+SQL commands are usually divided into groups:
+DDL — Data Definition Language
+Used to create or change table structure.
+Commands:
+CREATE
+ALTER
+DROP
+TRUNCATE
+DML — Data Manipulation Language
+Used to change data inside table.
+Commands:
+INSERT
+UPDATE
+DELETE
+DQL — Data Query Language
+Used to get data.
+Command:
+SELECT
+You do not need to master everything today.
+For Day 1, just understand that SQL is used to fetch and manage data.
+4) Your First SQL Query
+Suppose we have a table called employees.
+SELECT * FROM employees;
+Meaning:
+SELECT = choose data
+* = all columns
+FROM employees = from the employees table
+This query means:
+Show me everything from the employees table.
+5) Example Table
+Let us use this table for examples:
+id	name	salary	department
+1	Ravi	50000	IT
+2	Neha	60000	HR
+3	Aman	45000	IT
+4	Pooja	70000	Sales
+6) Basic SELECT Examples
+Show only names
+SELECT name
+FROM employees;
+Show name and salary
+SELECT name, salary
+FROM employees;
+Show all columns
+SELECT *
+FROM employees;
+7) Simple Interview-Level Concept
+If someone asks:
+What does SQL do?
+You can say:
+SQL is a language used to store, fetch, update, and delete data from databases.
+8) Very Easy Day 1 Practice Questions
+Try these by yourself first.
+Practice 1
+What will this query do?
+SELECT * FROM employees;
+Answer:
+It shows all columns and all rows from the employees table.
+Practice 2
+What will this query show?
+SELECT name FROM employees;
+Answer:
+It shows only the name column from the employees table.
+Practice 3
+What will this query show?
+SELECT name, salary FROM employees;
+Answer:
+It shows only the name and salary columns.
+Practice 4
+What is a row?
+Answer:
+A row is one complete record in a table.
+Example:
+1, Ravi, 50000, IT
+Practice 5
+What is a column?
+Answer:
+A column is one type of information in a table.
+Example:
+salary is a column.
+9) Interview Questions with Simple Answers
+Q1. What is SQL?
+Answer:
+SQL is a language used to work with data in databases.
+Q2. What is a database?
+Answer:
+A database is a place where data is stored in an organized way.
+Q3. What is a table in SQL?
+Answer:
+A table stores data in rows and columns.
+Q4. What is a row?
+Answer:
+A row is one full record in a table.
+Q5. What is a column?
+Answer:
+A column is one field or one type of data, like name or salary.
+Q6. What does SELECT do?
+Answer:
+SELECT is used to fetch data from a table.
+Q7. What does * mean in SQL?
+Answer:
+It means all columns.
+Q8. What is the use of FROM?
+Answer:
+FROM tells SQL from which table to take data.
+10) Small Theory You Should Remember
+Use this in simple words:
+Database = storage place for data
+Table = data in rows and columns
+Row = one record
+Column = one field
+SQL = language to work with database
+11) Mini Revision for Day 1
+Remember these 3 lines:
+SELECT * FROM employees;
+SELECT name FROM employees;
+SELECT name, salary FROM employees;
+These three queries are enough to understand the basic idea of SQL.
+12) Day 1 Homework
+Write these on paper or in a notebook:
+What is SQL?
+What is a database?
+What is a table?
+What is a row?
+What is a column?
+What does SELECT do?
+What does * mean?
+13) One-Line Interview Answer Set
+If interviewer asks very basic questions, you can answer like this:
+SQL is used to interact with databases. It helps us fetch, insert, update, and delete data. Data in SQL is stored in tables, and tables have rows and columns.
