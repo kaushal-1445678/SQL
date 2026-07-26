@@ -1,0 +1,288 @@
+Day 2: SELECT, FROM, WHERE
+Goal of Day 2
+By the end of today, you should be able to:
+Retrieve data from a table
+Retrieve specific columns
+Filter records using conditions
+Write simple SQL queries confidently
+Answer common SQL interview questions
+What is a Query?
+A query is simply a request to the database.
+Example:
+"Show me all employees."
+That request is written in SQL.
+Sample Table
+Suppose we have this table:
+employees
+id	name	age	department	salary
+1	Rahul	25	IT	50000
+2	Amit	30	HR	45000
+3	Neha	28	IT	70000
+4	Priya	26	Sales	40000
+5	Vikas	35	Finance	90000
+We'll use this table throughout Day 2.
+SELECT
+SELECT tells SQL:
+"What data do you want?"
+Syntax
+SELECT column_name
+FROM table_name;
+Example
+SELECT name
+FROM employees;
+Output
+name
+Rahul
+Amit
+Neha
+Priya
+Vikas
+Only the name column is displayed.
+Selecting Multiple Columns
+SELECT name, salary
+FROM employees;
+Output
+name	salary
+Rahul	50000
+Amit	45000
+Neha	70000
+Priya	40000
+Vikas	90000
+Selecting All Columns
+Use *
+SELECT *
+FROM employees;
+Meaning:
+Give me every column.
+Output
+id	name	age	department	salary
+Everything is returned.
+FROM
+FROM tells SQL:
+"Which table should I read?"
+Example
+SELECT *
+FROM employees;
+SQL reads the employees table.
+Without FROM, SQL doesn't know where to get the data.
+WHERE
+This is one of the most important keywords in SQL.
+WHERE filters rows.
+Think of it like a filter in Excel.
+Example:
+Show employees earning more than ₹50,000.
+SELECT *
+FROM employees
+WHERE salary > 50000;
+Output
+id	name	salary
+3	Neha	70000
+5	Vikas	90000
+Comparison Operators
+These are used inside WHERE.
+Equal (=)
+SELECT *
+FROM employees
+WHERE department = 'IT';
+Output
+Rahul
+Neha
+Greater Than (>)
+SELECT *
+FROM employees
+WHERE salary > 60000;
+Output
+Neha
+Vikas
+Less Than (<)
+SELECT *
+FROM employees
+WHERE salary < 50000;
+Output
+Amit
+Priya
+Greater Than or Equal (>=)
+SELECT *
+FROM employees
+WHERE salary >= 70000;
+Output
+Neha
+Vikas
+Less Than or Equal (<=)
+SELECT *
+FROM employees
+WHERE salary <= 45000;
+Output
+Amit
+Priya
+Not Equal
+SQLite supports:
+!=
+or
+<>
+Example
+SELECT *
+FROM employees
+WHERE department != 'IT';
+Output
+Amit
+Priya
+Vikas
+How SQL Executes This Query
+Example
+SELECT name, salary
+FROM employees
+WHERE salary > 50000;
+Execution order:
+Step 1
+Read employees table
+
+↓
+
+Step 2
+Apply WHERE filter
+
+↓
+
+Step 3
+Pick required columns
+
+↓
+
+Step 4
+Display result
+Notice that although SELECT is written first, SQL logically processes FROM first, then WHERE, and finally SELECT.
+Create the Practice Table in SQLite
+Run these commands in SQLite.
+CREATE TABLE employees (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    age INTEGER,
+    department TEXT,
+    salary INTEGER
+);
+Insert data
+INSERT INTO employees VALUES
+(1,'Rahul',25,'IT',50000),
+(2,'Amit',30,'HR',45000),
+(3,'Neha',28,'IT',70000),
+(4,'Priya',26,'Sales',40000),
+(5,'Vikas',35,'Finance',90000);
+Check data
+SELECT * FROM employees;
+Practice Questions
+Try these yourself before looking at the answers.
+Q1
+Display all employees.
+<details> <summary>Answer</summary>
+SELECT *
+FROM employees;
+</details>
+Q2
+Display only names.
+<details> <summary>Answer</summary>
+SELECT name
+FROM employees;
+</details>
+Q3
+Display names and salaries.
+<details> <summary>Answer</summary>
+SELECT name, salary
+FROM employees;
+</details>
+Q4
+Show employees earning more than ₹60,000.
+<details> <summary>Answer</summary>
+SELECT *
+FROM employees
+WHERE salary > 60000;
+</details>
+Q5
+Show employees from the IT department.
+<details> <summary>Answer</summary>
+SELECT *
+FROM employees
+WHERE department = 'IT';
+</details>
+Q6
+Show employees aged less than 30.
+<details> <summary>Answer</summary>
+SELECT *
+FROM employees
+WHERE age < 30;
+</details>
+Q7
+Show employees earning ₹45,000 or less.
+SELECT *
+FROM employees
+WHERE salary <= 45000;
+Q8
+Display only department names.
+SELECT department
+FROM employees;
+Q9
+Display employees who are not in HR.
+SELECT *
+FROM employees
+WHERE department != 'HR';
+Q10
+Display employee names with salary greater than ₹50,000.
+SELECT name, salary
+FROM employees
+WHERE salary > 50000;
+Mini Challenge
+Without looking at the notes, write queries for:
+Show only age.
+Show employees with salary < ₹70,000.
+Show employees whose department is Sales.
+Show employee names only from Finance.
+Show employees aged 35.
+Common Mistakes
+❌ Forgetting quotes for text
+Wrong
+WHERE department = IT
+Correct
+WHERE department = 'IT'
+❌ Using double equals
+Wrong
+WHERE salary == 50000
+In standard SQL, use:
+WHERE salary = 50000
+Note: SQLite also accepts ==, but for interview-ready SQL, always use =.
+❌ Misspelling table names
+FROM employee
+instead of
+FROM employees
+Interview Questions
+1. What does SELECT do?
+Answer:
+SELECT is used to retrieve data from one or more columns in a table.
+2. What does FROM do?
+Answer:
+FROM specifies the table from which the data should be retrieved.
+3. What is WHERE used for?
+Answer:
+WHERE filters rows based on a specified condition before returning the result.
+4. What is the difference between SELECT * and SELECT name?
+Answer:
+SELECT * returns all columns.
+SELECT name returns only the name column.
+5. Which operator checks equality?
+Answer:
+=
+Example:
+WHERE department = 'IT'
+6. Which operators compare numbers?
+Answer:
+>
+<
+>=
+<=
+=
+!= or <>
+7. Does WHERE filter columns or rows?
+Answer:
+It filters rows, not columns.
+8. Can WHERE be used without SELECT?
+Answer:
+No. WHERE is part of a query and is typically used with SELECT, UPDATE, or DELETE.
