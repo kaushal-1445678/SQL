@@ -1,0 +1,290 @@
+Day 5 
+DDL (Data Definition Language)
+🎯 Today's Goal
+By the end of today, you'll understand:
+✅ CREATE
+✅ ALTER
+✅ DROP
+✅ TRUNCATE (Interview concept)
+✅ RENAME
+✅ Difference between DROP and TRUNCATE
+
+What is DDL?
+DDL stands for Data Definition Language.
+DDL commands are used to create or change the structure of database objects like tables.
+Think of building a house:
+CREATE → Build a new house
+ALTER → Add a new room
+RENAME → Change the house name
+DROP → Demolish the house
+Notice these commands work on the structure, not just the data.
+
+1. CREATE
+What is CREATE?
+CREATE is used to create a new database object.
+Examples:
+Table
+Database (not in SQLite)
+View
+Index
+
+Syntax
+CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype
+);
+
+Example
+CREATE TABLE students (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    age INTEGER
+);
+Now check your tables:
+.tables
+Output
+employees
+students
+
+Insert Some Data
+INSERT INTO students VALUES
+(1,'Rahul',21),
+(2,'Neha',22),
+(3,'Amit',20);
+View data:
+SELECT * FROM students;
+
+2. ALTER
+What is ALTER?
+ALTER changes the structure of an existing table.
+For example:
+Today:
+Students
+
+ID
+Name
+Age
+Tomorrow:
+Students
+
+ID
+Name
+Age
+City
+You don't create a new table.
+You modify the existing one.
+
+SQLite supports ADD COLUMN
+ALTER TABLE students
+ADD COLUMN city TEXT;
+Now view the structure:
+.schema students
+Output
+CREATE TABLE students (
+ id INTEGER PRIMARY KEY,
+ name TEXT,
+ age INTEGER,
+ city TEXT
+);
+
+Update the New Column
+UPDATE students
+SET city='Noida'
+WHERE id=1;
+
+Important Note
+SQLite does not support every ALTER operation that MySQL or SQL Server supports.
+For interviews, you should know these common operations:
+ALTER TABLE employees
+ADD COLUMN email VARCHAR(100);
+ALTER TABLE employees
+DROP COLUMN email;
+ALTER TABLE employees
+MODIFY COLUMN salary BIGINT;
+The last two are not supported directly in SQLite, but they are common interview questions.
+
+3. DROP
+What is DROP?
+DROP completely removes a table.
+Imagine deleting the entire building.
+Both:
+Table
+Data
+are removed.
+
+Syntax
+DROP TABLE students;
+Now check:
+.tables
+The students table is gone.
+Trying:
+SELECT * FROM students;
+Results in:
+no such table: students
+
+4. TRUNCATE
+What is TRUNCATE?
+TRUNCATE removes all rows from a table.
+But...
+The table itself still exists.
+Think of it like this:
+A classroom
+Before
+Students
+
+Rahul
+Neha
+Amit
+After TRUNCATE
+Students
+
+(empty)
+The classroom still exists.
+Only the students are gone.
+
+SQLite
+SQLite does not support:
+TRUNCATE TABLE students;
+You'll get an error.
+Instead, use:
+DELETE FROM students;
+to remove all rows.
+
+5. RENAME
+Rename a table.
+Example
+ALTER TABLE students
+RENAME TO college_students;
+Now:
+.tables
+Output
+college_students
+employees
+
+Difference Between DROP and TRUNCATE
+This is one of the most common interview questions.
+Feature
+DROP
+TRUNCATE
+Deletes data
+✅ Yes
+✅ Yes
+Deletes table
+✅ Yes
+❌ No
+Table remains?
+❌ No
+✅ Yes
+Structure remains?
+❌ No
+✅ Yes
+Can insert again immediately?
+❌ Must recreate the table
+✅ Yes
+
+
+Example
+Before
+students
+
+Rahul
+Neha
+Amit
+DROP
+DROP TABLE students;
+After
+Nothing exists.
+
+TRUNCATE
+TRUNCATE TABLE students;
+After
+students
+
+(no rows)
+The table is still there.
+
+SQLite Equivalent of TRUNCATE
+DELETE FROM students;
+Removes all rows.
+The table remains.
+
+Practice Questions
+Q1
+Create a table called products.
+CREATE TABLE products(
+    id INTEGER PRIMARY KEY,
+    product_name TEXT,
+    price INTEGER
+);
+
+Q2
+Insert data.
+INSERT INTO products VALUES
+(1,'Laptop',50000),
+(2,'Mouse',800),
+(3,'Keyboard',1500);
+
+Q3
+View all products.
+SELECT * FROM products;
+
+Q4
+Add a new column.
+ALTER TABLE products
+ADD COLUMN brand TEXT;
+
+Q5
+Rename the table.
+ALTER TABLE products
+RENAME TO electronic_products;
+
+Q6
+Display all tables.
+.tables
+
+Q7
+See the table structure.
+.schema electronic_products
+
+Q8
+Delete all rows (SQLite equivalent of TRUNCATE).
+DELETE FROM electronic_products;
+
+Q9
+Drop the table.
+DROP TABLE electronic_products;
+
+Q10
+Verify the table is deleted.
+.tables
+Interview Questions
+1. What is DDL?
+Answer:
+DDL (Data Definition Language) consists of SQL commands used to create, modify, rename, and delete database objects such as tables.
+
+2. What is CREATE?
+Answer:
+CREATE is used to create new database objects like tables, views, and indexes.
+
+3. What is ALTER?
+Answer:
+ALTER modifies the structure of an existing table, such as adding a new column or renaming the table.
+
+4. What is DROP?
+Answer:
+DROP permanently removes both the table and all of its data.
+
+5. What is TRUNCATE?
+Answer:
+TRUNCATE removes all rows from a table while keeping the table structure intact. (Not supported in SQLite.)
+
+6. What is the difference between DROP and TRUNCATE?
+Answer:
+DROP removes both the table and its data.
+TRUNCATE removes only the data; the table structure remains.
+
+7. Does SQLite support TRUNCATE?
+Answer:
+No. In SQLite, use:
+DELETE FROM table_name;
+to remove all rows.
