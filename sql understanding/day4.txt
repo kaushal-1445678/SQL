@@ -1,0 +1,233 @@
+📅 Day 4: Aliases (AS) and Arithmetic Operations (+, -, *, /)
+🎯 Today's Goal
+By the end of today, you'll be able to:
+Use column aliases with AS
+Use table aliases
+Perform arithmetic operations in SQL
+Write cleaner, more readable queries
+Answer common interview questions
+We'll continue using the same employees table.
+id	name	age	department	salary
+1	Rahul	25	IT	50000
+2	Amit	30	HR	45000
+3	Neha	28	IT	70000
+4	Priya	26	Sales	40000
+5	Vikas	35	Finance	90000
+6	Rohit	29	HR	55000
+Part 1: Column Alias (AS)
+What is an Alias?
+An alias is a temporary name given to a column or table.
+Think of it as giving someone a nickname.
+Example:
+Rahul → Rocky (nickname)
+Similarly,
+salary → Employee Salary
+The actual column name does not change in the database.
+Syntax
+SELECT column_name AS alias_name
+FROM table_name;
+Example 1
+Instead of displaying the heading salary, display Employee Salary.
+SELECT salary AS "Employee Salary"
+FROM employees;
+Output
+Employee Salary
+50000
+45000
+70000
+40000
+90000
+55000
+Example 2
+Rename multiple columns.
+SELECT
+    name AS Employee_Name,
+    department AS Dept,
+    salary AS Salary
+FROM employees;
+Output
+Employee_Name	Dept	Salary
+Rahul	IT	50000
+Amit	HR	45000
+...	...	...
+Can We Skip AS?
+Yes.
+These two queries are the same:
+SELECT salary AS Salary
+FROM employees;
+SELECT salary Salary
+FROM employees;
+Interview Tip
+Always use AS because it makes your SQL easier to read.
+Part 2: Table Alias
+Suppose your table name is very long.
+employee_information_details
+Writing it repeatedly is inconvenient.
+Instead, give it a short name.
+Syntax
+SELECT alias.column_name
+FROM table_name AS alias;
+Example
+SELECT e.name,
+       e.salary
+FROM employees AS e;
+Output
+name	salary
+Rahul	50000
+Amit	45000
+...	...
+Here:
+employees = original table
+e = temporary alias
+Without Alias
+SELECT employees.name,
+       employees.salary
+FROM employees;
+Works, but is longer.
+Why Use Table Aliases?
+Imagine joining two tables:
+SELECT e.name,
+       d.department_name
+FROM employees AS e
+JOIN departments AS d
+ON e.department = d.department_name;
+Table aliases make JOIN queries much shorter and easier to read.
+Part 3: Arithmetic Operations
+SQL can perform calculations.
+Operators:
+Operator	Meaning
++	Addition
+-	Subtraction
+*	Multiplication
+/	Division
+Addition (+)
+Suppose everyone gets a ₹5,000 bonus.
+SELECT
+    name,
+    salary,
+    salary + 5000 AS New_Salary
+FROM employees;
+Output
+Name	Salary	New_Salary
+Rahul	50000	55000
+Amit	45000	50000
+...	...	...
+Subtraction (-)
+Suppose ₹2,000 tax is deducted.
+SELECT
+    name,
+    salary,
+    salary - 2000 AS Salary_After_Tax
+FROM employees;
+Multiplication (*)
+Suppose salary doubles.
+SELECT
+    name,
+    salary,
+    salary * 2 AS Double_Salary
+FROM employees;
+Division (/)
+Monthly salary from yearly salary.
+SELECT
+    name,
+    salary,
+    salary / 12 AS Monthly_Salary
+FROM employees;
+SQLite returns integer results because salary is an integer column.
+Multiple Calculations
+SELECT
+    name,
+    salary,
+    salary + 5000 AS Bonus,
+    salary * 2 AS Double_Salary,
+    salary / 12 AS Monthly
+FROM employees;
+Arithmetic Using Age
+Increase everyone's age by 1.
+SELECT
+    name,
+    age,
+    age + 1 AS Next_Year_Age
+FROM employees;
+Practice Questions
+Q1
+Display employee names with the heading Employee Name.
+SELECT name AS "Employee Name"
+FROM employees;
+Q2
+Display salary as Monthly Salary.
+SELECT salary AS "Monthly Salary"
+FROM employees;
+Q3
+Display employee names and salary using table alias.
+SELECT e.name,
+       e.salary
+FROM employees AS e;
+Q4
+Give every employee a ₹10,000 bonus.
+SELECT
+    name,
+    salary,
+    salary + 10000 AS New_Salary
+FROM employees;
+Q5
+Subtract ₹3,000 from every salary.
+SELECT
+    name,
+    salary,
+    salary - 3000 AS Salary_After_Deduction
+FROM employees;
+Q6
+Double every salary.
+SELECT
+    name,
+    salary,
+    salary * 2 AS Double_Salary
+FROM employees;
+Q7
+Find monthly salary.
+SELECT
+    name,
+    salary,
+    salary / 12 AS Monthly_Salary
+FROM employees;
+Q8
+Increase everyone's age by 5 years.
+SELECT
+    name,
+    age,
+    age + 5 AS Future_Age
+FROM employees;
+Q9
+Show employee names and departments using aliases.
+SELECT
+    name AS Employee,
+    department AS Department
+FROM employees;
+Q10
+Use a table alias to display all employee details.
+SELECT e.*
+FROM employees AS e;
+
+Interview Questions
+1. What is an alias in SQL?
+Answer:
+An alias is a temporary name given to a column or table to make query results more readable.
+2. Does an alias change the actual column name?
+Answer:
+No. It only changes the name displayed in the query result.
+3. Why do we use table aliases?
+Answer:
+Table aliases make queries shorter and are especially useful when working with joins involving multiple tables.
+4. Can you use AS for both columns and tables?
+Answer:
+Yes.
+Example:
+SELECT e.name AS Employee_Name
+FROM employees AS e;
+5. Which arithmetic operators can SQL use?
+Answer:
++ Addition
+- Subtraction
+* Multiplication
+/ Division
