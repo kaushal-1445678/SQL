@@ -1,0 +1,351 @@
+Day 3: DISTINCT, ORDER BY, LIMIT
+Today's Goal
+By the end of today, you'll be able to:
+Remove duplicate values using DISTINCT
+Sort data using ORDER BY
+Get the top N records using LIMIT
+Understand TOP (SQL Server only)
+Answer common interview questions
+Sample Table
+Suppose your employees table contains:
+id	name	age	department	salary
+1	Rahul	25	IT	50000
+2	Amit	30	HR	45000
+3	Neha	28	IT	70000
+4	Priya	26	Sales	40000
+5	Vikas	35	Finance	90000
+6	Rohit	29	HR	55000
+Notice that IT appears twice and HR appears twice.
+1. DISTINCT
+What is DISTINCT?
+DISTINCT removes duplicate values from the result.
+Imagine you ask:
+"What departments are there in the company?"
+You don't want:
+IT
+HR
+IT
+Sales
+Finance
+HR
+You only want unique department names.
+Syntax
+SELECT DISTINCT column_name
+FROM table_name;
+Example 1
+SELECT DISTINCT department
+FROM employees;
+Output
+department
+IT
+HR
+Sales
+Finance
+Notice:
+IT appears only once
+HR appears only once
+Without DISTINCT
+SELECT department
+FROM employees;
+Output
+IT
+HR
+IT
+Sales
+Finance
+HR
+Duplicates are shown.
+DISTINCT on Multiple Columns
+SELECT DISTINCT department, salary
+FROM employees;
+Now SQL removes duplicate department + salary combinations.
+It does not remove duplicates from each column separately.
+Real-Life Example
+Imagine a school database.
+Students
+Rahul
+Rahul
+Rahul
+Amit
+Amit
+Neha
+If you want unique names:
+SELECT DISTINCT name
+FROM students;
+Result
+Rahul
+Amit
+Neha
+2. ORDER BY
+Suppose HR asks:
+Show employees from highest salary to lowest salary.
+Without ORDER BY, SQL may return rows in any order.
+Syntax
+SELECT *
+FROM employees
+ORDER BY column_name;
+ASC (Ascending)
+Ascending means:
+Small → Large
+A → Z
+1 → 100
+Example
+SELECT *
+FROM employees
+ORDER BY salary ASC;
+Output
+Salary
+40000
+45000
+50000
+55000
+70000
+90000
+ASC is the default.
+So this is also correct:
+SELECT *
+FROM employees
+ORDER BY salary;
+DESC (Descending)
+Descending means:
+Large → Small
+Z → A
+100 → 1
+Example
+SELECT *
+FROM employees
+ORDER BY salary DESC;
+Output
+Salary
+90000
+70000
+55000
+50000
+45000
+40000
+Order by Name
+SELECT *
+FROM employees
+ORDER BY name ASC;
+Output
+Amit
+Neha
+Priya
+Rahul
+Rohit
+Vikas
+Order by Age
+SELECT *
+FROM employees
+ORDER BY age DESC;
+Oldest employee comes first.
+Sorting by Multiple Columns
+Suppose two employees have the same department.
+First sort by department.
+Then within each department sort by salary.
+SELECT *
+FROM employees
+ORDER BY department ASC,
+         salary DESC;
+SQL works like this:
+Finance
+   Highest salary first
+
+HR
+   Highest salary first
+
+IT
+   Highest salary first
+
+Sales
+LIMIT
+Sometimes you don't need all rows.
+You only need:
+Top 5
+Top 10
+First 100
+SQLite uses LIMIT.
+Syntax
+SELECT *
+FROM employees
+LIMIT 3;
+Output
+First 3 rows.
+Highest Salary Employee
+SELECT *
+FROM employees
+ORDER BY salary DESC
+LIMIT 1;
+Output
+Name	Salary
+Vikas	90000
+This is a very common interview question.
+Top 3 Highest Salaries
+SELECT *
+FROM employees
+ORDER BY salary DESC
+LIMIT 3;
+Output
+90000
+
+70000
+
+55000
+Lowest 2 Salaries
+SELECT *
+FROM employees
+ORDER BY salary ASC
+LIMIT 2;
+Output
+40000
+
+45000
+SQL Server Uses TOP
+SQLite
+SELECT *
+FROM employees
+LIMIT 5;
+SQL Server
+SELECT TOP 5 *
+FROM employees;
+For your SQLite practice
+Only remember:
+LIMIT
+You don't need to write TOP in SQLite.
+How SQL Executes This Query
+Example
+SELECT name, salary
+FROM employees
+ORDER BY salary DESC
+LIMIT 3;
+Execution:
+Step 1
+Read employees table
+
+↓
+
+Step 2
+Select required columns
+
+↓
+
+Step 3
+Sort salaries (highest to lowest)
+
+↓
+
+Step 4
+Return first 3 rows
+Practice Questions
+Q1
+Show all departments.
+<details> <summary>Answer</summary>
+SELECT department
+FROM employees;
+</details>
+Q2
+Show unique departments.
+<details> <summary>Answer</summary>
+SELECT DISTINCT department
+FROM employees;
+</details>
+Q3
+Show all employees sorted by salary (low to high).
+SELECT *
+FROM employees
+ORDER BY salary ASC;
+Q4
+Show all employees sorted by salary (high to low).
+SELECT *
+FROM employees
+ORDER BY salary DESC;
+Q5
+Display employee names alphabetically.
+SELECT name
+FROM employees
+ORDER BY name ASC;
+Q6
+Display oldest employee first.
+SELECT *
+FROM employees
+ORDER BY age DESC;
+Q7
+Display first 2 employees.
+SELECT *
+FROM employees
+LIMIT 2;
+Q8
+Display highest salary employee.
+SELECT *
+FROM employees
+ORDER BY salary DESC
+LIMIT 1;
+Q9
+Display top 3 highest-paid employees.
+SELECT *
+FROM employees
+ORDER BY salary DESC
+LIMIT 3;
+Q10
+Display 2 employees with the lowest salaries.
+SELECT *
+FROM employees
+ORDER BY salary ASC
+LIMIT 2;
+Mini Challenge
+Try these without looking at the answers:
+Show unique employee ages.
+Display departments in alphabetical order.
+Show the top 4 highest-paid employees.
+Show the youngest employee.
+Display employee names in reverse alphabetical order.
+Show unique salaries sorted from highest to lowest.
+
+
+Interview Questions
+1. What is DISTINCT?
+Answer:
+DISTINCT returns only unique values by removing duplicate rows from the query result.
+2. Does DISTINCT modify the table?
+Answer:
+No. It only affects the result returned by the query.
+3. What is ORDER BY?
+Answer:
+ORDER BY sorts the query result in ascending or descending order based on one or more columns.
+4. What is the default sorting order?
+Answer:
+Ascending (ASC).
+So these are equivalent:
+ORDER BY salary;
+ORDER BY salary ASC;
+5. What is the difference between ASC and DESC?
+Answer:
+ASC → Lowest to highest, A to Z.
+DESC → Highest to lowest, Z to A.
+6. What is LIMIT?
+Answer:
+LIMIT restricts the number of rows returned by the query. It's commonly used for pagination and fetching the top N records.
+7. What is TOP?
+Answer:
+TOP is used in SQL Server to limit the number of rows. In SQLite and MySQL, LIMIT is used instead.
+8. How do you find the highest salary?
+Answer:
+SELECT *
+FROM employees
+ORDER BY salary DESC
+LIMIT 1;
+9. How do you find the top 5 highest-paid employees?
+Answer:
+SELECT *
+FROM employees
+ORDER BY salary DESC
+LIMIT 5;
+10. Can ORDER BY sort multiple columns?
+Answer:
+Yes.
+Example:
+SELECT *
+FROM employees
+ORDER BY department ASC,
+         salary DESC;
+This sorts by department first, then by salary within each department.
