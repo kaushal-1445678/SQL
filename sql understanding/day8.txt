@@ -1,0 +1,474 @@
+Day 8 
+Filtering Conditions
+🎯 Today's Goal
+By the end of today, you'll be able to use:
+✅ AND
+✅ OR
+✅ NOT
+✅ IN
+✅ BETWEEN
+✅ LIKE
+We'll continue using the same employees table.
+
+Our Sample Table
+SELECT * FROM employees;
+id
+name
+age
+department
+salary
+1
+Rahul
+25
+IT
+50000
+2
+Amit
+30
+HR
+45000
+3
+Neha
+28
+IT
+70000
+4
+Priya
+26
+Sales
+40000
+5
+Vikas
+35
+Finance
+90000
+6
+Rohit
+29
+HR
+55000
+
+
+What is Filtering?
+Imagine your company has 10,000 employees.
+Your manager asks:
+"Show only IT employees."
+You don't want all 10,000 rows.
+You only want matching rows.
+This is called filtering.
+Filtering is done using the WHERE clause.
+SELECT *
+FROM employees
+WHERE condition;
+Everything you learn today goes after WHERE.
+
+1. AND Operator
+What is AND?
+AND means:
+Both conditions must be TRUE.
+Think of it like a security gate.
+To enter the office:
+Employee ID ✔️
+Fingerprint ✔️
+If even one is missing → Entry denied.
+
+Syntax
+SELECT *
+FROM employees
+WHERE condition1
+AND condition2;
+
+Example 1
+Show employees who:
+work in IT
+have salary greater than ₹60,000
+SELECT *
+FROM employees
+WHERE department = 'IT'
+AND salary > 60000;
+Output
+name
+department
+salary
+Neha
+IT
+70000
+
+Rahul is not included because:
+IT ✔️
+Salary > ₹60,000 ❌
+Both conditions must be true.
+
+Example 2
+Employees older than 25 and earning more than ₹50,000.
+SELECT *
+FROM employees
+WHERE age > 25
+AND salary > 50000;
+Output:
+Name
+Neha
+Vikas
+Rohit
+
+
+2. OR Operator
+What is OR?
+OR means:
+At least one condition must be TRUE.
+
+Example
+Show employees who are:
+in IT
+OR in HR
+SELECT *
+FROM employees
+WHERE department = 'IT'
+OR department = 'HR';
+Output
+|Rahul|
+|Amit|
+|Neha|
+|Rohit|
+
+Another Example
+SELECT *
+FROM employees
+WHERE salary > 80000
+OR age < 26;
+Output
+Rahul (age 25)
+Vikas (salary ₹90,000)
+Only one condition needs to be true.
+
+Difference Between AND and OR
+Suppose your manager says:
+AND
+Show employees from IT and salary above ₹60,000.
+Only:
+Neha
+
+OR
+Show employees from IT or salary above ₹60,000.
+Result:
+Rahul
+Neha
+Vikas
+OR always returns more rows because only one condition needs to match.
+
+3. NOT Operator
+What is NOT?
+NOT means:
+Opposite of the condition.
+
+Example
+Show employees who are not in HR.
+SELECT *
+FROM employees
+WHERE NOT department = 'HR';
+Output
+Rahul
+Neha
+Priya
+Vikas
+
+Another way (also valid):
+SELECT *
+FROM employees
+WHERE department != 'HR';
+or
+SELECT *
+FROM employees
+WHERE department <> 'HR';
+
+4. IN Operator
+Problem Without IN
+Suppose you want employees from:
+IT
+HR
+Finance
+You could write:
+SELECT *
+FROM employees
+WHERE department = 'IT'
+OR department = 'HR'
+OR department = 'Finance';
+Works, but it's long.
+
+Better Way
+SELECT *
+FROM employees
+WHERE department IN ('IT','HR','Finance');
+Much cleaner.
+
+Another Example
+Find employees whose age is 25, 28, or 35.
+SELECT *
+FROM employees
+WHERE age IN (25,28,35);
+Output
+Rahul
+Neha
+Vikas
+
+5. BETWEEN
+What is BETWEEN?
+Used to find values within a range.
+Think:
+Between 20 and 30.
+
+Syntax
+SELECT *
+FROM employees
+WHERE salary BETWEEN 45000 AND 70000;
+This includes:
+₹45,000 ✔️
+₹50,000 ✔️
+₹55,000 ✔️
+₹70,000 ✔️
+
+Output
+Amit
+Rahul
+Rohit
+Neha
+
+Important
+BETWEEN is inclusive.
+It includes both start and end values.
+
+Age Example
+SELECT *
+FROM employees
+WHERE age BETWEEN 26 AND 30;
+Output
+Priya
+Neha
+Rohit
+Amit
+
+6. LIKE
+What is LIKE?
+LIKE searches for patterns in text.
+This is one of the most asked interview topics.
+
+Wildcards
+There are two important wildcards.
+Wildcard
+Meaning
+%
+Any number of characters
+_
+Exactly one character
+
+
+% Wildcard
+Starts With
+Find names starting with R.
+SELECT *
+FROM employees
+WHERE name LIKE 'R%';
+Output
+Rahul
+Rohit
+
+Ends With
+Find names ending with a.
+SELECT *
+FROM employees
+WHERE name LIKE '%a';
+Output
+Neha
+Priya
+
+Contains
+Find names containing h.
+SELECT *
+FROM employees
+WHERE name LIKE '%h%';
+Output
+Rahul
+Neha
+Rohit
+
+_ Wildcard
+_ means exactly one character.
+Example:
+SELECT *
+FROM employees
+WHERE name LIKE 'R____';
+This pattern means:
+Starts with R
+Followed by exactly 4 more characters
+Matches:
+Rahul
+Rohit
+(Both names have 5 letters.)
+
+Combining Conditions
+Employees from IT whose salary is between ₹40,000 and ₹80,000.
+SELECT *
+FROM employees
+WHERE department='IT'
+AND salary BETWEEN 40000 AND 80000;
+
+Employees in HR or Finance.
+SELECT *
+FROM employees
+WHERE department IN ('HR','Finance');
+
+Names starting with R and salary above ₹50,000.
+SELECT *
+FROM employees
+WHERE name LIKE 'R%'
+AND salary > 50000;
+
+For example, Day 8 Practice Questions with Answers
+Q1. Display employees from the IT department.
+Answer:
+SELECT *
+FROM employees
+WHERE department = 'IT';
+
+Q2. Display employees from the HR department earning more than ₹50,000.
+Answer:
+SELECT *
+FROM employees
+WHERE department = 'HR'
+AND salary > 50000;
+
+Q3. Display employees from IT or Finance.
+Answer:
+SELECT *
+FROM employees
+WHERE department = 'IT'
+OR department = 'Finance';
+
+Q4. Display employees who are not in Sales.
+Answer:
+SELECT *
+FROM employees
+WHERE department != 'Sales';
+
+Q5. Display employees whose department is IT, HR, or Finance.
+Answer:
+SELECT *
+FROM employees
+WHERE department IN ('IT', 'HR', 'Finance');
+
+Q6. Display employees whose salary is between ₹45,000 and ₹70,000.
+Answer:
+SELECT *
+FROM employees
+WHERE salary BETWEEN 45000 AND 70000;
+
+Q7. Display employees whose age is between 26 and 30.
+Answer:
+SELECT *
+FROM employees
+WHERE age BETWEEN 26 AND 30;
+
+Q8. Display employees whose names start with R.
+Answer:
+SELECT *
+FROM employees
+WHERE name LIKE 'R%';
+
+Q9. Display employees whose names end with a.
+Answer:
+SELECT *
+FROM employees
+WHERE name LIKE '%a';
+
+Q10. Display employees whose names contain the letter h.
+Answer:
+SELECT *
+FROM employees
+WHERE name LIKE '%h%';
+
+Q11. Display employees from IT whose salary is greater than ₹60,000.
+Answer:
+SELECT *
+FROM employees
+WHERE department = 'IT'
+AND salary > 60000;
+
+Q12. Display employees from HR or Sales.
+Answer:
+SELECT *
+FROM employees
+WHERE department = 'HR'
+OR department = 'Sales';
+
+Q13. Display employees whose salary is not ₹50,000.
+Answer:
+SELECT *
+FROM employees
+WHERE salary != 50000;
+
+Q14. Display employees whose names start with N.
+Answer:
+SELECT *
+FROM employees
+WHERE name LIKE 'N%';
+
+Q15. Display employees whose age is 25, 28, or 35.
+Answer:
+SELECT *
+FROM employees
+WHERE age IN (25, 28, 35);
+
+Mini Challenge Answers
+Q1. Find employees whose age is between 25 and 30 and department is IT.
+SELECT *
+FROM employees
+WHERE age BETWEEN 25 AND 30
+AND department = 'IT';
+
+Q2. Find employees whose salary is greater than ₹50,000 and are not in HR.
+SELECT *
+FROM employees
+WHERE salary > 50000
+AND department != 'HR';
+
+Q3. Find employees whose names contain the letter o.
+SELECT *
+FROM employees
+WHERE name LIKE '%o%';
+
+Q4. Find employees in IT or Sales whose salary is greater than ₹45,000.
+SELECT *
+FROM employees
+WHERE (department = 'IT' OR department = 'Sales')
+AND salary > 45000;
+Interview Tip: Notice the parentheses. They make the intended logic clear and avoid mistakes when combining AND and OR.
+
+Q5. Find employees whose names end with t.
+SELECT *
+FROM employees
+WHERE name LIKE '%t';
+Interview Questions
+1. What is the difference between AND and OR?
+Answer:
+AND → All conditions must be true.
+OR → At least one condition must be true.
+
+2. What does NOT do?
+Answer:
+It returns rows that do not satisfy the given condition.
+
+3. Why use IN instead of multiple OR conditions?
+Answer:
+IN makes queries shorter, cleaner, and easier to read.
+
+4. Is BETWEEN inclusive?
+Answer:
+Yes. It includes both the starting and ending values.
+Example:
+WHERE salary BETWEEN 45000 AND 70000;
+This includes ₹45,000 and ₹70,000.
+
+5. What is the difference between % and _ in LIKE?
+Answer:
+% → Zero or more characters.
+_ → Exactly one character.

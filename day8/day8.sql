@@ -1,0 +1,32 @@
+-- CREATE TABLE employees (
+--     id INTEGER PRIMARY KEY,
+--     name TEXT,
+--     age INTEGER,
+--     department TEXT,
+--     salary INTEGER
+-- );
+
+-- INSERT INTO employees VALUES
+-- (1,'Rahul',25,'IT',50000),
+-- (2,'Amit',30,'HR',45000),
+-- (3,'Neha',28,'IT',70000),
+-- (4,'Priya',26,'Sales',40000),
+-- (5,'Vikas',35,'Finance',90000),
+-- (6,'Rohit',29,'HR',55000);
+
+-- select * from employees where department='IT';
+-- select * from employees where department='HR' and salary>50000;
+-- select * from employees where department='IT' OR department='Finance'; 
+-- select * from employees where department in('IT','Finance'); 
+-- select * from employees where department !='Sales';
+-- SELECT * FROM employees where department IN('IT','HR','Finance'); 
+-- select * from employees where salary BETWEEN 45000 AND 75000;
+-- SELECT * from employees WHERE age BETWEEN 26 AND 30;
+-- SELECT * from employees where name LIKE 'R%';
+-- SELECT * from employees where name LIKE '%a';
+-- SELECT * from employees where name LIKE '%h%';
+-- SELECT * from employees where department='IT' and salary>60000;
+-- SELECT * from employees where department in ('HR','Sales');
+-- SELECT * from employees where salary != 50000;
+-- SELECT * from employees where name LIKE 'N%';
+SELECT * from employees where age in (25,28,35);
