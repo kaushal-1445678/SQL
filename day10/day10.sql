@@ -1,0 +1,31 @@
+-- CREATE TABLE employees (
+--     id INTEGER PRIMARY KEY,
+--     name TEXT,
+--     age INTEGER,
+--     department TEXT,
+--     salary INTEGER
+-- );
+
+-- INSERT INTO employees VALUES
+-- (1,'Rahul',25,'IT',50000),
+-- (2,'Amit',30,'HR',45000),
+-- (3,'Neha',28,'IT',70000),
+-- (4,'Priya',26,'Sales',40000),
+-- (5,'Vikas',35,'Finance',90000),
+-- (6,'Rohit',29,'HR',55000);
+
+-- select COUNT(*) from employees;
+-- select COUNT(*) from employees where salary>50000;
+-- select SUM(salary) from employees;
+-- select AVG(salary) from employees;
+-- select MAX(salary) from employees;
+-- select MIN(salary) from employees;
+-- select AVG(age) from employees;
+-- SELECT SUM(salary) from employees WHERE department='HR';
+-- SELECT COUNT(*) from employees where department='IT';
+-- select MAX(age) from employees;
+-- select SUM(salary) from employees where salary>50000;
+-- select AVG(salary) from employees where department='IT';
+-- select MIN(age) from employees;
+-- select COUNT(*) from employees where age>28;
+-- select MAX(salary) from employees where department='HR';
