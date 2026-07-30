@@ -1,0 +1,454 @@
+Day 11
+GROUP BY
+🎯 Today's Goal
+By the end of today, you'll understand:
+✅ What is GROUP BY
+✅ Why we use GROUP BY
+✅ One row per group
+✅ GROUP BY with COUNT()
+✅ GROUP BY with SUM()
+✅ GROUP BY with AVG()
+✅ GROUP BY with MIN() and MAX()
+✅ Common mistakes
+✅ SQLite vs MySQL vs SQL Server differences
+✅ Practice questions with answers
+✅ Interview questions with answers
+
+Database Compatibility
+Feature
+SQLite
+MySQL
+PostgreSQL
+SQL Server
+GROUP BY
+✅
+✅
+✅
+✅
+
+✅ No syntax differences. Everything you learn today works in SQLite, MySQL, PostgreSQL, and SQL Server.
+
+Our Sample Table
+SELECT * FROM employees;
+id
+name
+age
+department
+salary
+1
+Rahul
+25
+IT
+50000
+2
+Amit
+30
+HR
+45000
+3
+Neha
+28
+IT
+70000
+4
+Priya
+26
+Sales
+40000
+5
+Vikas
+35
+Finance
+90000
+6
+Rohit
+29
+HR
+55000
+
+
+What is GROUP BY?
+Suppose your manager asks:
+"How many employees are there in each department?"
+Without GROUP BY, COUNT(*) gives:
+SELECT COUNT(*)
+FROM employees;
+Output:
+COUNT(*)
+6
+
+But the manager wants department-wise counts.
+That's where GROUP BY comes in.
+Think of GROUP BY Like This
+Imagine six students in a classroom.
+Rahul  → IT
+Neha   → IT
+Amit   → HR
+Rohit  → HR
+Priya  → Sales
+Vikas  → Finance
+Now the teacher says:
+"Stand with students from your own department."
+Groups become:
+IT
+ Rahul
+ Neha
+
+HR
+ Amit
+ Rohit
+
+Sales
+ Priya
+
+Finance
+ Vikas
+SQL does exactly this.
+
+One Row Per Group
+This is the most important rule.
+After grouping, SQL returns one row for each unique group.
+For our table:
+Departments:
+IT
+HR
+Sales
+Finance
+So the result has 4 rows, not 6.
+
+Basic Syntax
+SELECT column_name,
+       aggregate_function(column_name)
+FROM table_name
+GROUP BY column_name;
+
+Example 1 – Count Employees in Each Department
+SELECT department,
+       COUNT(*) AS Total_Employees
+FROM employees
+GROUP BY department;
+Output
+department
+Total_Employees
+Finance
+1
+HR
+2
+IT
+2
+Sales
+1
+
+Explanation
+SQL first groups rows:
+IT
+ Rahul
+ Neha
+
+HR
+ Amit
+ Rohit
+
+Sales
+ Priya
+
+Finance
+ Vikas
+Then COUNT(*) counts rows inside each group.
+
+Example 2 – Total Salary in Each Department
+SELECT department,
+       SUM(salary) AS Total_Salary
+FROM employees
+GROUP BY department;
+Output
+department
+Total_Salary
+Finance
+90000
+HR
+100000
+IT
+120000
+Sales
+40000
+
+
+Example 3 – Average Salary in Each Department
+SELECT department,
+       AVG(salary) AS Average_Salary
+FROM employees
+GROUP BY department;
+Output
+department
+Average_Salary
+Finance
+90000
+HR
+50000
+IT
+60000
+Sales
+40000
+
+
+Example 4 – Highest Salary in Each Department
+SELECT department,
+       MAX(salary) AS Highest_Salary
+FROM employees
+GROUP BY department;
+Output
+department
+Highest_Salary
+Finance
+90000
+HR
+55000
+IT
+70000
+Sales
+40000
+
+
+Example 5 – Lowest Salary in Each Department
+SELECT department,
+       MIN(salary) AS Lowest_Salary
+FROM employees
+GROUP BY department;
+Output
+department
+Lowest_Salary
+Finance
+90000
+HR
+45000
+IT
+50000
+Sales
+40000
+
+
+GROUP BY on Another Column
+You are not limited to departments.
+Count employees by age.
+SELECT age,
+       COUNT(*) AS Total
+FROM employees
+GROUP BY age;
+Every unique age becomes one group.
+
+GROUP BY + WHERE
+WHERE filters rows before grouping.
+Example:
+Find the average salary of departments where employees earn at least ₹50,000.
+SELECT department,
+       AVG(salary) AS Average_Salary
+FROM employees
+WHERE salary >= 50000
+GROUP BY department;
+What Happens?
+Step 1 (WHERE):
+Remove employees with salary below ₹50,000.
+Remaining:
+Rahul
+Neha
+Rohit
+Vikas
+Step 2 (GROUP BY):
+IT
+ Rahul
+ Neha
+
+HR
+ Rohit
+
+Finance
+ Vikas
+Step 3 (AVG):
+Calculate the average for each remaining group.
+
+GROUP BY with Multiple Columns
+You can group by more than one column.
+Example:
+SELECT department,
+       age,
+       COUNT(*) AS Total
+FROM employees
+GROUP BY department, age;
+This creates a group for every unique combination of department + age.
+
+Common Mistake #1 (Very Important)
+❌ Wrong:
+SELECT name,
+       department,
+       COUNT(*)
+FROM employees
+GROUP BY department;
+Why?
+name is not grouped and not inside an aggregate function.
+PostgreSQL and SQL Server: ❌ Error.
+SQLite: It may return a value, but it is not guaranteed to be the one you expect.
+MySQL: Depends on SQL mode. With ONLY_FULL_GROUP_BY enabled (the default in modern MySQL), it also gives an error.
+✅ Correct:
+SELECT department,
+       COUNT(*)
+FROM employees
+GROUP BY department;
+Or, if you really need names, rethink the query (you'll learn more advanced techniques later).
+
+Common Mistake #2
+❌ Wrong:
+SELECT COUNT(*)
+FROM employees
+GROUP BY salary;
+When the interviewer asks:
+"How many employees are there?"
+You don't need GROUP BY.
+Correct:
+SELECT COUNT(*)
+FROM employees;
+
+Common Mistake #3
+Thinking GROUP BY sorts data.
+It doesn't.
+If you want sorting:
+SELECT department,
+       COUNT(*) AS Total
+FROM employees
+GROUP BY department
+ORDER BY department;
+GROUP BY groups rows.
+ORDER BY sorts rows.
+These are different operations.
+
+Practice Questions (with Answers)
+Q1. Count employees in each department.
+SELECT department,
+       COUNT(*) AS Total_Employees
+FROM employees
+GROUP BY department;
+
+Q2. Find the total salary of each department.
+SELECT department,
+       SUM(salary) AS Total_Salary
+FROM employees
+GROUP BY department;
+
+Q3. Find the average salary of each department.
+SELECT department,
+       AVG(salary) AS Average_Salary
+FROM employees
+GROUP BY department;
+
+Q4. Find the highest salary in each department.
+SELECT department,
+       MAX(salary) AS Highest_Salary
+FROM employees
+GROUP BY department;
+
+Q5. Find the lowest salary in each department.
+SELECT department,
+       MIN(salary) AS Lowest_Salary
+FROM employees
+GROUP BY department;
+
+Q6. Count employees for each age.
+SELECT age,
+       COUNT(*) AS Total
+FROM employees
+GROUP BY age;
+
+Q7. Find the average age of employees in each department.
+SELECT department,
+       AVG(age) AS Average_Age
+FROM employees
+GROUP BY department;
+
+Q8. Count employees whose salary is at least ₹50,000, grouped by department.
+SELECT department,
+       COUNT(*) AS Total
+FROM employees
+WHERE salary >= 50000
+GROUP BY department;
+
+Q9. Find the maximum age in each department.
+SELECT department,
+       MAX(age) AS Maximum_Age
+FROM employees
+GROUP BY department;
+
+Q10. Find the minimum age in each department.
+SELECT department,
+       MIN(age) AS Minimum_Age
+FROM employees
+GROUP BY department;
+
+Mini Challenge (with Answers)
+Q1. Find the total salary paid in each department where the total is based only on employees earning more than ₹45,000.
+SELECT department,
+       SUM(salary) AS Total_Salary
+FROM employees
+WHERE salary > 45000
+GROUP BY department;
+
+Q2. Find the average salary of departments where employees are older than 27.
+SELECT department,
+       AVG(salary) AS Average_Salary
+FROM employees
+WHERE age > 27
+GROUP BY department;
+
+Q3. Count employees in each department whose age is at least 28.
+SELECT department,
+       COUNT(*) AS Total
+FROM employees
+WHERE age >= 28
+GROUP BY department;
+
+Q4. Find the highest salary for each department.
+SELECT department,
+       MAX(salary) AS Highest_Salary
+FROM employees
+GROUP BY department;
+
+Q5. Find the lowest salary for each department.
+SELECT department,
+       MIN(salary) AS Lowest_Salary
+FROM employees
+GROUP BY department;
+
+Interview Questions (with Answers)
+1. What is GROUP BY?
+Answer:
+GROUP BY groups rows that have the same value in one or more columns and allows aggregate functions to calculate results for each group.
+
+2. Why do we use GROUP BY?
+Answer:
+To calculate summaries such as count, total, average, minimum, or maximum for each group, instead of for the whole table.
+
+3. Why does GROUP BY return one row per group?
+Answer:
+Because SQL combines all rows with the same grouping value into one group, then returns one summary row for that group.
+
+4. Can we use WHERE with GROUP BY?
+Answer:
+Yes.
+WHERE filters rows first, then GROUP BY groups the remaining rows.
+Example:
+SELECT department,
+       COUNT(*)
+FROM employees
+WHERE salary >= 50000
+GROUP BY department;
+
+5. Does GROUP BY sort the results?
+Answer:
+No.
+To sort the grouped results, use ORDER BY.
+
+6. Can you select a column that isn't in GROUP BY?
+Answer:
+Only if that column is inside an aggregate function (like COUNT(), SUM(), MAX(), etc.).
+For portability across databases and interview correctness, every selected column should either:
+be listed in the GROUP BY, or
+be wrapped in an aggregate function.
