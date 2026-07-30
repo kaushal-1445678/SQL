@@ -1,0 +1,386 @@
+Day 9
+ NULL Handling
+Interview Importance: ⭐⭐⭐⭐⭐ (Very High)
+Almost every SQL interview contains at least one question related to NULL.
+
+🎯 Today's Goal
+By the end of today, you'll understand:
+✅ What is NULL
+✅ IS NULL
+✅ IS NOT NULL
+✅ Difference between NULL and an empty string ('')
+✅ COALESCE()
+✅ Common interview questions
+✅ SQLite vs MySQL vs SQL Server differences
+
+Database Compatibility
+Feature
+SQLite
+MySQL
+PostgreSQL
+SQL Server
+IS NULL
+✅
+✅
+✅
+✅
+IS NOT NULL
+✅
+✅
+✅
+✅
+COALESCE()
+✅
+✅
+✅
+✅
+Empty String ('')
+✅
+✅
+✅
+✅
+
+Good news: Everything you learn today works the same way in SQLite, MySQL, PostgreSQL, and SQL Server.
+
+What is NULL?
+Many beginners think NULL means:
+"Nothing"
+This is not exactly correct.
+NULL means:
+The value is unknown or missing.
+
+Real-Life Example
+Imagine a company's employee database.
+Name
+Phone Number
+Rahul
+9876543210
+Neha
+NULL
+
+Does Neha have no phone?
+We don't know.
+Maybe:
+She didn't provide it.
+It hasn't been entered yet.
+The information is missing.
+That's why SQL stores it as NULL.
+
+NULL is NOT Zero
+Salary = 0
+Means:
+The salary is exactly ₹0.
+
+Salary = NULL
+Means:
+We don't know the salary.
+
+NULL is NOT an Empty String
+Suppose:
+Name = ''
+Means:
+The value is an empty text.
+
+Name = NULL
+Means:
+The value is unknown.
+These are completely different.
+
+Let's Create a Table
+Create a new table.
+CREATE TABLE employees_null (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    email TEXT,
+    phone TEXT,
+    salary INTEGER
+);
+Insert data.
+INSERT INTO employees_null
+VALUES
+(1,'Rahul','rahul@gmail.com','9876543210',50000),
+(2,'Amit',NULL,'9876543211',45000),
+(3,'Neha','neha@gmail.com',NULL,70000),
+(4,'Priya',NULL,NULL,40000),
+(5,'Vikas','', '9876543215',90000);
+View the data.
+SELECT *
+FROM employees_null;
+id
+name
+email
+phone
+salary
+1
+Rahul
+rahul@gmail.com
+9876543210
+50000
+2
+Amit
+NULL
+9876543211
+45000
+3
+Neha
+neha@gmail.com
+NULL
+70000
+4
+Priya
+NULL
+NULL
+40000
+5
+Vikas
+''
+9876543215
+90000
+
+Notice:
+Amit's email = NULL
+Priya's email = NULL
+Vikas's email = '' (empty string)
+
+1. IS NULL
+What is IS NULL?
+Used to find rows where a column has NULL.
+
+Syntax
+SELECT *
+FROM table_name
+WHERE column_name IS NULL;
+
+Example
+Find employees whose email is missing.
+SELECT *
+FROM employees_null
+WHERE email IS NULL;
+Output
+Name
+Amit
+Priya
+
+
+Very Important Interview Point
+Many beginners write:
+SELECT *
+FROM employees_null
+WHERE email = NULL;
+❌ Wrong.
+This returns no rows.
+
+Correct:
+WHERE email IS NULL;
+✅ Always use IS NULL.
+
+2. IS NOT NULL
+Find rows where the value exists.
+
+Syntax
+SELECT *
+FROM employees_null
+WHERE column_name IS NOT NULL;
+
+Example
+SELECT *
+FROM employees_null
+WHERE phone IS NOT NULL;
+Output
+Rahul
+Amit
+Vikas
+
+Difference Between NULL and Empty String
+This is one of the most common interview questions.
+Look again:
+Name
+Email
+Amit
+NULL
+Vikas
+''
+
+They are different.
+
+NULL
+Means:
+Unknown value.
+
+Empty String
+Means:
+The value is known, but it contains no characters.
+Length = 0.
+
+Find Empty String
+SELECT *
+FROM employees_null
+WHERE email = '';
+Output
+Vikas
+
+Find NULL
+SELECT *
+FROM employees_null
+WHERE email IS NULL;
+Output
+Amit
+Priya
+
+COALESCE()
+This is an interview favorite.
+
+What does COALESCE() do?
+Returns the first non-NULL value.
+
+Syntax
+COALESCE(value1,value2,value3,...)
+SQL checks values from left to right.
+Returns the first value that is not NULL.
+
+Example
+SELECT
+name,
+COALESCE(email,'Email Not Available')
+FROM employees_null;
+Output
+Name
+Email
+Rahul
+rahul@gmail.com
+Amit
+Email Not Available
+Neha
+neha@gmail.com
+Priya
+Email Not Available
+Vikas
+''
+
+Notice something important.
+Vikas still shows an empty string.
+Why?
+Because empty string is not NULL.
+COALESCE() only replaces NULL values.
+
+Another Example
+SELECT
+name,
+COALESCE(phone,'No Phone')
+FROM employees_null;
+Output
+Rahul → 9876543210
+Neha → No Phone
+
+Multiple Values
+SELECT
+COALESCE(NULL,NULL,'SQL',NULL);
+Output
+SQL
+It returns the first non-NULL value.
+
+Practice Questions
+Q1
+Find employees whose email is NULL.
+Answer
+SELECT *
+FROM employees_null
+WHERE email IS NULL;
+
+Q2
+Find employees whose phone number is NOT NULL.
+Answer
+SELECT *
+FROM employees_null
+WHERE phone IS NOT NULL;
+
+Q3
+Find employees whose email is an empty string.
+Answer
+SELECT *
+FROM employees_null
+WHERE email = '';
+
+Q4
+Replace NULL emails with "Not Available".
+Answer
+SELECT
+name,
+COALESCE(email,'Not Available') AS email
+FROM employees_null;
+
+Q5
+Replace NULL phone numbers with "No Phone".
+Answer
+SELECT
+name,
+COALESCE(phone,'No Phone') AS phone
+FROM employees_null;
+
+Q6
+Find employees whose phone number is NULL.
+Answer
+SELECT *
+FROM employees_null
+WHERE phone IS NULL;
+
+Q7
+Find employees whose email is NOT NULL.
+Answer
+SELECT *
+FROM employees_null
+WHERE email IS NOT NULL;
+
+Q8
+Display all employees and replace NULL salary with 0.
+Answer
+SELECT
+name,
+COALESCE(salary,0) AS salary
+FROM employees_null;
+
+Q9
+Display employee names and email.
+If email is NULL show:
+No Email
+Answer
+SELECT
+name,
+COALESCE(email,'No Email') AS email
+FROM employees_null;
+
+Q10
+Return the first non-NULL value.
+Answer
+SELECT COALESCE(NULL,NULL,'SQLite',NULL);
+Output
+SQLite
+
+Interview Questions
+1. What is NULL?
+Answer:
+NULL represents a missing or unknown value.
+
+2. Can you compare NULL using =?
+Answer:
+No. Use IS NULL or IS NOT NULL.
+
+3. What is the difference between NULL and an empty string?
+Answer:
+NULL → Unknown or missing value.
+'' → A known text value with zero characters.
+
+4. What does COALESCE() do?
+Answer:
+It returns the first non-NULL value from the list of expressions.
+
+5. Does COALESCE() replace empty strings?
+Answer:
+No. It only replaces NULL values.
+
+6."Show the first available contact information. Use email if available, otherwise phone."
+*Then COALESCE() becomes very useful.
+SELECT
+    name,
+    COALESCE(email, phone, 'No Contact') AS contact
+FROM employees_null;
