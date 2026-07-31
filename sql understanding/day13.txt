@@ -1,0 +1,447 @@
+Day 13
+ String Functions
+🎯 Today's Goal
+By the end of today, you'll understand:
+✅ UPPER()
+✅ LOWER()
+✅ LENGTH()
+✅ SUBSTRING() / SUBSTR()
+✅ CONCAT()
+✅ TRIM()
+✅ SQLite vs MySQL vs SQL Server differences
+✅ Practice Questions
+✅ Interview Questions
+✅ Common Mistakes
+
+🔥 Database Compatibility (Very Important)
+Some string functions are different in SQLite.
+Function
+SQLite
+MySQL
+PostgreSQL
+SQL Server
+UPPER()
+✅
+✅
+✅
+✅
+LOWER()
+✅
+✅
+✅
+✅
+LENGTH()
+✅
+✅
+✅
+❌ (LEN())
+SUBSTRING()
+❌ (Use SUBSTR())
+✅
+✅
+✅
+SUBSTR()
+✅
+✅
+✅
+❌
+CONCAT()
+❌ (Newer SQLite versions support it, but prefer `
+
+
+`)
+✅
+TRIM()
+✅
+✅
+✅
+✅
+
+
+⭐ Interview Tip
+Since you're practicing in SQLite, remember these differences:
+If using SQLite
+Use
+Extract characters
+SUBSTR()
+Join strings
+`
+Find length
+LENGTH()
+
+In interviews, if they ask general SQL, you can answer with SUBSTRING() and CONCAT(). If they specifically mention SQLite, use SUBSTR() and ||.
+
+Sample Table
+Let's create a new table.
+CREATE TABLE employees_string (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    department TEXT
+);
+Insert data.
+INSERT INTO employees_string VALUES
+(1,' Rahul ','IT'),
+(2,'Amit','HR'),
+(3,'Neha','Finance'),
+(4,'Priya','Sales'),
+(5,'Rohit','IT');
+Check the table.
+SELECT * FROM employees_string;
+id
+name
+department
+1
+Rahul
+IT
+2
+Amit
+HR
+3
+Neha
+Finance
+4
+Priya
+Sales
+5
+Rohit
+IT
+
+Notice Rahul has spaces before and after the name.
+
+1. UPPER()
+What is UPPER()?
+Converts text to uppercase.
+
+Syntax
+SELECT UPPER(column_name)
+FROM table_name;
+
+Example
+SELECT
+name,
+UPPER(name) AS Upper_Name
+FROM employees_string;
+Output
+name
+Upper_Name
+Rahul
+RAHUL
+Amit
+AMIT
+Neha
+NEHA
+
+
+Real-Life Use
+Imagine all names should appear in capital letters in a report.
+rahul
+
+↓
+
+RAHUL
+
+2. LOWER()
+Converts text to lowercase.
+
+Example
+SELECT
+name,
+LOWER(name) AS Lower_Name
+FROM employees_string;
+Output
+name
+Lower_Name
+Rahul
+rahul
+Amit
+amit
+
+
+Real-Life Use
+Emails are often stored in lowercase.
+Kaushal@Gmail.Com
+
+↓
+
+kaushal@gmail.com
+
+3. LENGTH()
+Returns the number of characters.
+
+SQLite
+SELECT
+name,
+LENGTH(name)
+FROM employees_string;
+Output
+name
+Length
+Rahul
+7
+Amit
+4
+Neha
+4
+
+Why is Rahul's length 7?
+Because spaces are counted.
+Rahul
+^     ^
+2 spaces
+
+SQL Server Difference
+SQLite
+LENGTH(name)
+SQL Server
+LEN(name)
+⭐ Interview Question
+What is the equivalent of LENGTH() in SQL Server?
+Answer:
+LEN()
+
+4. SUBSTRING()
+This is the first important database difference.
+
+SQLite
+Uses
+SUBSTR()
+
+MySQL
+Uses
+SUBSTRING()
+
+PostgreSQL
+Uses both
+SUBSTRING()
+and
+SUBSTR()
+
+SQLite Syntax
+SUBSTR(text,start,length)
+
+Example
+SELECT
+name,
+SUBSTR(name,1,3)
+FROM employees_string;
+Output
+name
+Result
+Rahul
+Ra
+Amit
+Ami
+Neha
+Neh
+
+Notice Rahul starts with a space. That's why the output isn't what you expect.
+Let's fix it later using TRIM().
+
+Another Example
+Get the last two characters.
+SELECT
+name,
+SUBSTR(name,-2)
+FROM employees_string;
+Output
+ul
+it
+ha
+ya
+it
+SQLite supports negative indexes, which is very handy.
+
+5. CONCAT()
+Used to join strings.
+
+MySQL
+SELECT CONCAT(name,' - ',department)
+FROM employees_string;
+
+SQLite
+The preferred way is:
+SELECT
+name || ' - ' || department AS Employee_Details
+FROM employees_string;
+Output
+Rahul - IT
+
+Amit - HR
+
+Interview Tip
+If you're in a SQLite interview, use:
+||
+If you're in MySQL, PostgreSQL, or SQL Server interviews, CONCAT() is widely accepted (though PostgreSQL also supports ||).
+
+6. TRIM()
+Removes spaces from the beginning and end of a string.
+
+Example
+Rahul currently is
+Rahul
+Run:
+SELECT
+name,
+TRIM(name)
+FROM employees_string;
+Output
+Before
+After
+Rahul
+Rahul
+
+
+Now combine TRIM() with LENGTH().
+SELECT
+name,
+LENGTH(name),
+LENGTH(TRIM(name))
+FROM employees_string;
+Output
+Name
+Before
+After
+Rahul
+7
+5
+
+
+Combining Functions
+SQL lets you combine functions.
+Example
+SELECT
+UPPER(TRIM(name))
+FROM employees_string;
+Output
+RAHUL
+
+AMIT
+
+NEHA
+
+Another Example
+SELECT
+SUBSTR(TRIM(name),1,2)
+FROM employees_string;
+Output
+Ra
+
+Am
+
+Ne
+
+Practice Questions (with Answers)
+Q1. Display all names in uppercase.
+SELECT UPPER(name)
+FROM employees_string;
+
+Q2. Display all names in lowercase.
+SELECT LOWER(name)
+FROM employees_string;
+
+Q3. Display the length of every name.
+SELECT
+name,
+LENGTH(name)
+FROM employees_string;
+
+Q4. Display the first three letters of every name.
+SQLite
+SELECT
+name,
+SUBSTR(name,1,3)
+FROM employees_string;
+
+Q5. Display employee name and department together.
+SQLite
+SELECT
+TRIM(name) || ' - ' || department
+FROM employees_string;
+
+Q6. Remove extra spaces from names.
+SELECT
+TRIM(name)
+FROM employees_string;
+
+Q7. Display the last two characters of each name.
+SELECT
+name,
+SUBSTR(TRIM(name),-2)
+FROM employees_string;
+
+Q8. Convert department names to lowercase.
+SELECT
+LOWER(department)
+FROM employees_string;
+
+Q9. Display the length of names after removing spaces.
+SELECT
+name,
+LENGTH(TRIM(name))
+FROM employees_string;
+
+Q10. Display the first letter of each department.
+SELECT
+department,
+SUBSTR(department,1,1)
+FROM employees_string;
+
+Mini Challenge (with Answers)
+Q1. Display names in uppercase without extra spaces.
+SELECT
+UPPER(TRIM(name))
+FROM employees_string;
+
+Q2. Display the first four letters of every department.
+SELECT
+department,
+SUBSTR(department,1,4)
+FROM employees_string;
+
+Q3. Display employee details as:
+Rahul works in IT
+SQLite
+SELECT
+TRIM(name) || ' works in ' || department AS Employee_Details
+FROM employees_string;
+
+Q4. Display the last three letters of every name.
+SELECT
+TRIM(name),
+SUBSTR(TRIM(name),-3)
+FROM employees_string;
+
+Q5. Display the total number of characters in each department.
+SELECT
+department,
+LENGTH(department)
+FROM employees_string;
+Interview Questions (with Answers)
+1. What does UPPER() do?
+Answer:
+Converts a string to uppercase.
+
+2. What does LOWER() do?
+Answer:
+Converts a string to lowercase.
+
+3. What is the difference between LENGTH() and LEN()?
+Answer:
+LENGTH() → SQLite, MySQL, PostgreSQL
+LEN() → SQL Server
+
+4. What is the difference between SUBSTR() and SUBSTRING()?
+Answer:
+SQLite mainly uses SUBSTR().
+MySQL, PostgreSQL, and SQL Server use SUBSTRING() (PostgreSQL also supports SUBSTR()).
+
+5. What does TRIM() do?
+Answer:
+Removes leading and trailing spaces from a string.
+
+6. How do you concatenate strings in SQLite?
+Answer:
+Use the || operator.
+Example:
+SELECT name || ' - ' || department
+FROM employees_string;
