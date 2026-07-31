@@ -1,0 +1,288 @@
+📅 Day 12: HAVING
+🎯 Today's Goal
+By the end of today, you'll understand:
+✅ What is HAVING
+✅ Why HAVING exists
+✅ Difference between WHERE and HAVING
+✅ HAVING with COUNT(), SUM(), AVG(), MIN(), MAX()
+✅ SQLite vs MySQL vs SQL Server differences
+✅ Practice questions with answers
+✅ Common mistakes
+✅ Interview questions with answers
+Database Compatibility
+Feature	SQLite	MySQL	PostgreSQL	SQL Server
+HAVING	✅	✅	✅	✅
+✅ Everything you learn today works in SQLite, MySQL, PostgreSQL, and SQL Server.
+Our Sample Table
+We'll continue using the same employees table.
+id	name	age	department	salary
+1	Rahul	25	IT	50000
+2	Amit	30	HR	45000
+3	Neha	28	IT	70000
+4	Priya	26	Sales	40000
+5	Vikas	35	Finance	90000
+6	Rohit	29	HR	55000
+First, Let's Recall GROUP BY
+Suppose you write:
+SELECT department, COUNT(*)
+FROM employees
+GROUP BY department;
+Output:
+department	COUNT(*)
+Finance	1
+HR	2
+IT	2
+Sales	1
+Now imagine your manager says:
+"Show only the departments that have at least 2 employees."
+Can WHERE do that?
+Wrong Way ❌
+Many beginners try:
+SELECT department, COUNT(*)
+FROM employees
+WHERE COUNT(*) >= 2
+GROUP BY department;
+SQLite returns an error similar to:
+misuse of aggregate: COUNT()
+Why?
+Remember the SQL execution order.
+SQL roughly processes queries like this:
+FROM
+WHERE
+GROUP BY
+Aggregate functions (COUNT, SUM, AVG, ...)
+HAVING
+SELECT
+ORDER BY
+Notice:
+👉 WHERE runs before COUNT() is calculated.
+At the time WHERE executes, SQL does not know the result of COUNT(*).
+That's Why HAVING Exists
+HAVING filters groups, not individual rows.
+Correct query:
+SELECT department,
+       COUNT(*) AS Total_Employees
+FROM employees
+GROUP BY department
+HAVING COUNT(*) >= 2;
+Output:
+department	Total_Employees
+HR	2
+IT	2
+Think of It Like This
+Imagine a classroom.
+Students:
+IT:
+Rahul
+Neha
+
+HR:
+Amit
+Rohit
+
+Sales:
+Priya
+
+Finance:
+Vikas
+GROUP BY creates the groups.
+Then HAVING says:
+"Keep only groups that satisfy my condition."
+Since only IT and HR have 2 employees, Sales and Finance are removed.
+WHERE vs HAVING
+This is one of the most asked interview questions.
+WHERE	HAVING
+Filters rows	Filters groups
+Runs before GROUP BY	Runs after GROUP BY
+Cannot use aggregate functions like COUNT()	Can use aggregate functions
+Used on individual records	Used on grouped results
+Example 1 – WHERE
+Find employees earning more than ₹50,000.
+SELECT *
+FROM employees
+WHERE salary > 50000;
+Output:
+name	salary
+Neha	70000
+Rohit	55000
+Vikas	90000
+WHERE removes rows before grouping.
+Example 2 – HAVING
+Find departments whose average salary is greater than ₹55,000.
+SELECT department,
+       AVG(salary) AS Average_Salary
+FROM employees
+GROUP BY department
+HAVING AVG(salary) > 55000;
+Output:
+department	Average_Salary
+Finance	90000
+IT	60000
+Example 3 – WHERE + HAVING Together
+Find departments where:
+employees earn at least ₹45,000
+average salary is greater than ₹55,000
+SELECT department,
+       AVG(salary) AS Average_Salary
+FROM employees
+WHERE salary >= 45000
+GROUP BY department
+HAVING AVG(salary) > 55000;
+Step 1 (WHERE)
+Remove Priya (₹40,000).
+Remaining:
+name	department	salary
+Rahul	IT	50000
+Amit	HR	45000
+Neha	IT	70000
+Vikas	Finance	90000
+Rohit	HR	55000
+Step 2 (GROUP BY)
+Groups:
+IT
+HR
+Finance
+Step 3 (AVG)
+IT → 60,000
+HR → 50,000
+Finance → 90,000
+Step 4 (HAVING)
+Keep only averages above ₹55,000.
+Output:
+department	Average_Salary
+Finance	90000
+IT	60000
+HAVING with COUNT()
+Departments having at least 2 employees.
+SELECT department,
+       COUNT(*) AS Total
+FROM employees
+GROUP BY department
+HAVING COUNT(*) >= 2;
+HAVING with SUM()
+Departments whose total salary exceeds ₹100,000.
+SELECT department,
+       SUM(salary) AS Total_Salary
+FROM employees
+GROUP BY department
+HAVING SUM(salary) > 100000;
+Output:
+department	Total_Salary
+IT	120000
+HAVING with MIN()
+Departments where the lowest salary is at least ₹45,000.
+SELECT department,
+       MIN(salary) AS Lowest_Salary
+FROM employees
+GROUP BY department
+HAVING MIN(salary) >= 45000;
+Output:
+department	Lowest_Salary
+Finance	90000
+HR	45000
+IT	50000
+HAVING with MAX()
+Departments whose highest salary is above ₹60,000.
+SELECT department,
+       MAX(salary) AS Highest_Salary
+FROM employees
+GROUP BY department
+HAVING MAX(salary) > 60000;
+Output:
+department	Highest_Salary
+Finance	90000
+IT	70000
+Practice Questions (with Answers)
+Q1. Find departments with at least 2 employees.
+SELECT department,
+       COUNT(*) AS Total_Employees
+FROM employees
+GROUP BY department
+HAVING COUNT(*) >= 2;
+Q2. Find departments whose average salary is greater than ₹50,000.
+SELECT department,
+       AVG(salary) AS Average_Salary
+FROM employees
+GROUP BY department
+HAVING AVG(salary) > 50000;
+Q3. Find departments whose total salary is greater than ₹90,000.
+SELECT department,
+       SUM(salary) AS Total_Salary
+FROM employees
+GROUP BY department
+HAVING SUM(salary) > 90000;
+Q4. Find departments whose highest salary is above ₹60,000.
+SELECT department,
+       MAX(salary) AS Highest_Salary
+FROM employees
+GROUP BY department
+HAVING MAX(salary) > 60000;
+Q5. Find departments whose lowest salary is at least ₹45,000.
+SELECT department,
+       MIN(salary) AS Lowest_Salary
+FROM employees
+GROUP BY department
+HAVING MIN(salary) >= 45000;
+Q6. Find departments having exactly one employee.
+SELECT department,
+       COUNT(*) AS Total
+FROM employees
+GROUP BY department
+HAVING COUNT(*) = 1;
+Q7. Find departments where the average age is greater than 28.
+SELECT department,
+       AVG(age) AS Average_Age
+FROM employees
+GROUP BY department
+HAVING AVG(age) > 28;
+Q8. Find departments whose total salary is at least ₹120,000.
+SELECT department,
+       SUM(salary) AS Total_Salary
+FROM employees
+GROUP BY department
+HAVING SUM(salary) >= 120000;
+Q9. Count employees in each department and show only departments with more than one employee.
+SELECT department,
+       COUNT(*) AS Total
+FROM employees
+GROUP BY department
+HAVING COUNT(*) > 1;
+Q10. Find departments where the maximum age is at least 30.
+SELECT department,
+       MAX(age) AS Maximum_Age
+FROM employees
+GROUP BY department
+HAVING MAX(age) >= 30;
+Mini Challenge (with Answers)
+Q1. Find departments with more than one employee and an average salary greater than ₹55,000.
+SELECT department,
+       COUNT(*) AS Total_Employees,
+       AVG(salary) AS Average_Salary
+FROM employees
+GROUP BY department
+HAVING COUNT(*) > 1
+   AND AVG(salary) > 55000;
+Q2. Find departments whose total salary is greater than ₹100,000.
+SELECT department,
+       SUM(salary) AS Total_Salary
+FROM employees
+GROUP BY department
+HAVING SUM(salary) > 100000;
+Q3. Find departments whose minimum salary is at least ₹45,000.
+SELECT department,
+       MIN(salary) AS Minimum_Salary
+FROM employees
+GROUP BY department
+HAVING MIN(salary) >= 45000;
+Q4. Find departments with exactly two employees.
+SELECT department,
+       COUNT(*) AS Total
+FROM employees
+GROUP BY department
+HAVING COUNT(*) = 2;
+Q5. Find departments whose highest salary is at least ₹70,000.
+SELECT department,
+       MAX(salary) AS Highest_Salary
+FROM employees
+GROUP BY department
+HAVING MAX(salary) >= 70000;
