@@ -1,0 +1,382 @@
+Day 14
+ Date Functions
+🎯 Today's Goal
+By the end of today, you'll understand:
+✅ Current Date
+✅ Current Date & Time
+✅ DATEADD() (or SQLite equivalent)
+✅ DATEDIFF() (or SQLite equivalent)
+✅ EXTRACT()
+✅ STRFTIME() (SQLite)
+✅ DATE(), TIME(), DATETIME()
+✅ SQLite vs MySQL vs PostgreSQL vs SQL Server differences
+✅ Practice Questions
+✅ Interview Questions
+✅ Common Mistakes
+
+⭐ Very Important
+This is the first topic where databases are significantly different.
+So we'll learn:
+SQLite (your VS Code practice)
+General SQL (MySQL/PostgreSQL/SQL Server)
+I'll always show both.
+
+Database Compatibility
+Task
+SQLite
+MySQL
+PostgreSQL
+SQL Server
+Current Date
+DATE('now')
+CURRENT_DATE
+CURRENT_DATE
+CAST(GETDATE() AS DATE)
+Current Time
+TIME('now')
+CURRENT_TIME
+CURRENT_TIME
+CAST(GETDATE() AS TIME)
+Current DateTime
+DATETIME('now')
+NOW()
+NOW()
+GETDATE()
+Add Days
+DATE(...,'+5 days')
+DATE_ADD()
++ INTERVAL
+DATEADD()
+Difference Between Dates
+JULIANDAY()
+DATEDIFF()
+Date subtraction
+DATEDIFF()
+Extract Year/Month
+STRFTIME()
+EXTRACT()
+EXTRACT()
+YEAR(), MONTH()
+
+
+Sample Table
+Let's create a table.
+CREATE TABLE employees_date(
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    joining_date TEXT
+);
+Insert data.
+INSERT INTO employees_date VALUES
+(1,'Rahul','2022-01-15'),
+(2,'Amit','2021-08-10'),
+(3,'Neha','2023-03-20'),
+(4,'Priya','2020-12-05'),
+(5,'Vikas','2024-06-01');
+View data
+SELECT * FROM employees_date;
+id
+name
+joining_date
+1
+Rahul
+2022-01-15
+2
+Amit
+2021-08-10
+3
+Neha
+2023-03-20
+4
+Priya
+2020-12-05
+5
+Vikas
+2024-06-01
+
+
+1️⃣ Current Date
+SQLite
+SELECT DATE('now');
+Example Output
+2026-07-31
+
+MySQL/PostgreSQL
+SELECT CURRENT_DATE;
+
+SQL Server
+SELECT CAST(GETDATE() AS DATE);
+
+2️⃣ Current Time
+SQLite
+SELECT TIME('now');
+Output
+18:40:10
+SQLite returns UTC by default.
+To get your local system time:
+SELECT TIME('now','localtime');
+
+3️⃣ Current Date & Time
+SQLite
+SELECT DATETIME('now');
+or
+SELECT DATETIME('now','localtime');
+Output
+2026-07-31 23:58:20
+
+MySQL
+SELECT NOW();
+
+SQL Server
+SELECT GETDATE();
+
+4️⃣ DATEADD()
+SQLite does not have DATEADD().
+Instead use modifiers.
+Add 10 days.
+SQLite
+SELECT DATE('2024-01-10','+10 days');
+Output
+2024-01-20
+
+Subtract 5 days
+SELECT DATE('2024-01-10','-5 days');
+Output
+2024-01-05
+
+Add 2 months
+SELECT DATE('2024-01-10','+2 months');
+Output
+2024-03-10
+
+Add 1 year
+SELECT DATE('2024-01-10','+1 year');
+Output
+2025-01-10
+
+SQL Server
+SELECT DATEADD(day,10,'2024-01-10');
+
+MySQL
+SELECT DATE_ADD('2024-01-10',INTERVAL 10 DAY);
+
+⭐ Interview Tip
+If the interviewer asks:
+How do you add 30 days?
+Answer according to the database.
+SQLite
+DATE(date,'+30 days')
+SQL Server
+DATEADD(day,30,date)
+MySQL
+DATE_ADD(date,INTERVAL 30 DAY)
+
+5️⃣ DATEDIFF()
+SQLite has no DATEDIFF().
+Instead use
+JULIANDAY()
+Difference between two dates.
+SELECT JULIANDAY('2024-01-20')
+-
+JULIANDAY('2024-01-10');
+Output
+10
+Meaning
+10 days
+
+SQL Server
+SELECT DATEDIFF(day,'2024-01-10','2024-01-20');
+
+MySQL
+SELECT DATEDIFF('2024-01-20','2024-01-10');
+
+Find Days Since Joining
+SQLite
+SELECT
+name,
+ROUND(JULIANDAY('now')-JULIANDAY(joining_date)) AS Days_Worked
+FROM employees_date;
+This calculates how many days each employee has worked.
+
+6️⃣ EXTRACT()
+SQLite doesn't support EXTRACT().
+Instead use
+STRFTIME()
+
+Extract Year
+SQLite
+SELECT
+name,
+STRFTIME('%Y',joining_date)
+FROM employees_date;
+Output
+name
+Year
+Rahul
+2022
+Amit
+2021
+
+
+Extract Month
+SELECT
+name,
+STRFTIME('%m',joining_date)
+FROM employees_date;
+Output
+01
+08
+03
+
+Extract Day
+SELECT
+name,
+STRFTIME('%d',joining_date)
+FROM employees_date;
+
+MySQL/PostgreSQL
+SELECT EXTRACT(YEAR FROM joining_date);
+
+STRFTIME()
+This is SQLite's most powerful date function.
+Common formats
+Format
+Meaning
+%Y
+Year
+%m
+Month
+%d
+Day
+%H
+Hour
+%M
+Minute
+%S
+Second
+
+
+Example
+SELECT STRFTIME('%Y-%m','now');
+Output
+2026-07
+
+Current Year
+SELECT STRFTIME('%Y','now');
+Output
+2026
+
+Current Month
+SELECT STRFTIME('%m','now');
+
+Current Day
+SELECT STRFTIME('%d','now');
+
+Practice Questions (with Answers)
+Q1 Display current date.
+SELECT DATE('now');
+
+Q2 Display current date and time.
+SELECT DATETIME('now','localtime');
+
+Q3 Add 15 days to today's date.
+SELECT DATE('now','+15 days');
+
+Q4 Subtract 30 days.
+SELECT DATE('now','-30 days');
+
+Q5 Display joining year.
+SELECT
+name,
+STRFTIME('%Y',joining_date)
+FROM employees_date;
+
+Q6 Display joining month.
+SELECT
+name,
+STRFTIME('%m',joining_date)
+FROM employees_date;
+
+Q7 Display joining day.
+SELECT
+name,
+STRFTIME('%d',joining_date)
+FROM employees_date;
+
+Q8 Find days worked.
+SELECT
+name,
+ROUND(JULIANDAY('now')-JULIANDAY(joining_date))
+AS Days_Worked
+FROM employees_date;
+
+Q9 Add one year to joining date.
+SELECT
+name,
+DATE(joining_date,'+1 year')
+FROM employees_date;
+
+Q10 Add three months.
+SELECT
+name,
+DATE(joining_date,'+3 months')
+FROM employees_date;
+
+Mini Challenge (with Answers)
+Q1 Find employees who joined in 2022.
+SELECT *
+FROM employees_date
+WHERE STRFTIME('%Y',joining_date)='2022';
+
+Q2 Find employees who joined in January.
+SELECT *
+FROM employees_date
+WHERE STRFTIME('%m',joining_date)='01';
+
+Q3 Show current year.
+SELECT STRFTIME('%Y','now');
+
+Q4 Add 100 days to every joining date.
+SELECT
+name,
+DATE(joining_date,'+100 days')
+FROM employees_date;
+
+Q5 Find employees working for more than 1000 days.
+SELECT
+name,
+ROUND(JULIANDAY('now')-JULIANDAY(joining_date))
+AS Days_Worked
+FROM employees_date
+WHERE JULIANDAY('now')-JULIANDAY(joining_date) > 1000;
+
+
+
+
+
+
+Interview Questions (with Answers)
+1. How do you get the current date in SQLite?
+Answer
+SELECT DATE('now');
+
+2. How do you get the current date and time?
+Answer
+SELECT DATETIME('now','localtime');
+
+3. How do you add 30 days in SQLite?
+Answer
+DATE(date_column,'+30 days')
+
+4. How do you calculate the difference between two dates in SQLite?
+Answer
+Using JULIANDAY():
+SELECT JULIANDAY(end_date) - JULIANDAY(start_date);
+
+5. How do you extract the year from a date in SQLite?
+Answer
+SELECT STRFTIME('%Y', joining_date);
+
+6. What is the SQLite equivalent of EXTRACT()?
+Answer
+STRFTIME().
