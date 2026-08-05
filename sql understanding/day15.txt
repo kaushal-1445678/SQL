@@ -1,0 +1,433 @@
+📅 Day 15: INNER JOIN
+🎯 Today's Goal
+By the end of today, you'll understand:
+✅ Why JOIN is needed
+✅ Primary Key & Foreign Key
+✅ What is INNER JOIN
+✅ How matching works
+✅ INNER JOIN syntax
+✅ SQLite vs MySQL vs SQL Server
+✅ Real-world examples
+✅ 10 Practice Questions (with answers)
+✅ 5 Mini Challenges (with answers)
+✅ Interview Questions (with answers)
+Database Compatibility
+Feature	SQLite	MySQL	PostgreSQL	SQL Server
+INNER JOIN	✅	✅	✅	✅
+✅ Good news: The syntax is the same in all databases.
+First Question
+Imagine you have this table.
+Employees Table
+emp_id	name	department_id
+1	Rahul	101
+2	Amit	102
+3	Neha	101
+4	Priya	103
+Departments Table
+department_id	department_name
+101	IT
+102	HR
+103	Sales
+Suppose your manager asks:
+Show employee name and department name.
+Can you get the department name from the Employees table?
+❌ No.
+Employees table only has:
+101
+102
+103
+It does not have:
+IT
+HR
+Sales
+Those are in another table.
+👉 That's why we need JOIN.
+Real-Life Example
+Imagine a school.
+Student Table
+Student_ID	Name	Class_ID
+1	Rahul	1
+2	Neha	2
+Class Table
+Class_ID	Class_Name
+1	10th
+2	11th
+If someone asks:
+Rahul studies in which class?
+The Student table only has:
+Class_ID = 1
+To know that 1 = 10th, you need to combine both tables.
+That combination is called a JOIN.
+What is a Primary Key?
+A Primary Key is a column whose value is unique and cannot be NULL.
+Example:
+CREATE TABLE departments (
+    department_id INTEGER PRIMARY KEY,
+    department_name TEXT
+);
+Example data:
+department_id	department_name
+101	IT
+102	HR
+103	Sales
+Notice:
+101 appears only once
+102 appears only once
+103 appears only once
+✅ This is a Primary Key.
+What is a Foreign Key?
+A Foreign Key is a column that refers to the Primary Key of another table.
+Employees table:
+emp_id	name	department_id
+1	Rahul	101
+2	Amit	102
+Here,
+department_id
+is a Foreign Key because it points to the Departments table.
+Relationship:
+Departments
+department_id (PK)
+
+↓
+
+Employees
+department_id (FK)
+Let's Create Tables in SQLite
+Departments Table
+CREATE TABLE departments (
+    department_id INTEGER PRIMARY KEY,
+    department_name TEXT
+);
+Insert data:
+INSERT INTO departments VALUES
+(101,'IT'),
+(102,'HR'),
+(103,'Sales'),
+(104,'Finance');
+Employees Table
+CREATE TABLE employees_join (
+    emp_id INTEGER PRIMARY KEY,
+    name TEXT,
+    age INTEGER,
+    salary INTEGER,
+    department_id INTEGER
+);
+Insert data:
+INSERT INTO employees_join VALUES
+(1,'Rahul',25,50000,101),
+(2,'Amit',30,45000,102),
+(3,'Neha',28,70000,101),
+(4,'Priya',26,40000,103),
+(5,'Vikas',35,90000,104),
+(6,'Rohit',29,55000,102);
+What is INNER JOIN?
+An INNER JOIN returns only the rows where there is a matching value in both tables.
+Think of it like this:
+Employees                    Departments
+
+Rahul ----101----------> IT
+Amit  ----102----------> HR
+Neha  ----101----------> IT
+Priya ----103----------> Sales
+Vikas ----104----------> Finance
+Rohit ----102----------> HR
+SQL matches:
+101 ↔ 101
+102 ↔ 102
+103 ↔ 103
+104 ↔ 104
+INNER JOIN Syntax
+SELECT columns
+FROM table1
+INNER JOIN table2
+ON table1.column = table2.column;
+First INNER JOIN
+SELECT
+e.name,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id;
+Output
+name	department_name
+Rahul	IT
+Amit	HR
+Neha	IT
+Priya	Sales
+Vikas	Finance
+Rohit	HR
+Understanding ON
+This line:
+ON e.department_id = d.department_id
+means:
+Compare
+
+Employees.department_id
+
+with
+
+Departments.department_id
+If equal:
+101 = 101 ✅
+
+Join them.
+Why Use Aliases?
+Without aliases:
+SELECT employees_join.name,
+departments.department_name
+FROM employees_join
+INNER JOIN departments
+ON employees_join.department_id =
+departments.department_id;
+Works, but it's long.
+Instead:
+employees_join → e
+
+departments → d
+Then:
+SELECT
+e.name,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id;
+Cleaner and easier to read.
+Example 2
+Show employee name, salary, and department.
+SELECT
+e.name,
+e.salary,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id;
+Example 3
+Employees working in IT.
+SELECT
+e.name,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id
+WHERE d.department_name='IT';
+Output
+name	department_name
+Rahul	IT
+Neha	IT
+Example 4
+Employees earning more than ₹50,000.
+SELECT
+e.name,
+e.salary,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+WHERE e.salary > 50000;
+Example 5
+Sort by salary.
+SELECT
+e.name,
+e.salary,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+ORDER BY e.salary DESC;
+Practice Questions (with Answers)
+Q1. Display employee name and department name.
+SELECT
+e.name,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id;
+Q2. Display employee name and salary.
+SELECT
+name,
+salary
+FROM employees_join;
+Q3. Display employee name, salary, and department.
+SELECT
+e.name,
+e.salary,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id;
+Q4. Display only IT employees.
+SELECT
+e.name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+WHERE d.department_name='IT';
+Q5. Display employees whose salary is greater than ₹50,000.
+SELECT
+e.name,
+e.salary,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+WHERE e.salary > 50000;
+Q6. Display all employees sorted by salary.
+SELECT
+e.name,
+e.salary,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+ORDER BY e.salary DESC;
+Q7. Count employees in each department.
+SELECT
+d.department_name,
+COUNT(*) AS Total_Employees
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+GROUP BY d.department_name;
+Q8. Find the average salary of each department.
+SELECT
+d.department_name,
+AVG(e.salary) AS Average_Salary
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+GROUP BY d.department_name;
+Q9. Find the highest salary in each department.
+SELECT
+d.department_name,
+MAX(e.salary) AS Highest_Salary
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+GROUP BY d.department_name;
+Q10. Find departments having more than one employee.
+SELECT
+d.department_name,
+COUNT(*) AS Total_Employees
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+GROUP BY d.department_name
+HAVING COUNT(*) > 1;
+Mini Challenge (with Answers)
+Q1. Show employee name and age along with department.
+SELECT
+e.name,
+e.age,
+d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id;
+Q2. Show employees in HR whose salary is greater than ₹45,000.
+SELECT
+e.name,
+e.salary
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+WHERE d.department_name='HR'
+AND e.salary > 45000;
+Q3. Show the department with the highest average salary.
+SELECT
+d.department_name,
+AVG(e.salary) AS Average_Salary
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+GROUP BY d.department_name
+ORDER BY Average_Salary DESC
+LIMIT 1;
+Q4. Count employees in each department and sort by count (highest first).
+SELECT
+d.department_name,
+COUNT(*) AS Total_Employees
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+GROUP BY d.department_name
+ORDER BY Total_Employees DESC;
+Q5. Find departments where the average salary is greater than ₹60,000.
+SELECT
+d.department_name,
+AVG(e.salary) AS Average_Salary
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id=d.department_id
+GROUP BY d.department_name
+HAVING AVG(e.salary) > 60000;
+Common Mistakes
+❌ Mistake 1: Forgetting the ON condition
+Wrong:
+SELECT *
+FROM employees_join
+INNER JOIN departments;
+This is invalid because SQL doesn't know how the tables are related.
+Correct:
+SELECT *
+FROM employees_join
+INNER JOIN departments
+ON employees_join.department_id = departments.department_id;
+❌ Mistake 2: Ambiguous column names
+If both tables have a column called department_id:
+Wrong:
+SELECT department_id
+FROM employees_join
+INNER JOIN departments
+ON department_id = department_id;
+SQL doesn't know which department_id you mean.
+Correct:
+SELECT e.department_id
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id;
+❌ Mistake 3: Forgetting aliases in larger queries
+Aliases make long join queries much easier to read and maintain.
+Interview Questions (with Answers)
+1. What is a JOIN?
+Answer:
+A JOIN combines rows from two or more tables using a related column.
+2. What is an INNER JOIN?
+Answer:
+An INNER JOIN returns only the rows where matching values exist in both tables.
+3. Why do we use INNER JOIN?
+Answer:
+To retrieve related data stored across multiple tables, such as employee details and department names.
+4. What is the difference between a Primary Key and a Foreign Key?
+Answer:
+Primary Key: Uniquely identifies each row in a table.
+Foreign Key: References the Primary Key of another table to create a relationship.
+5. What happens if there is no matching row in an INNER JOIN?
+Answer:
+That row is not included in the result.
+Quick Cheat Sheet
+-- Basic INNER JOIN
+SELECT e.name, d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id;
+
+-- INNER JOIN with WHERE
+SELECT e.name, d.department_name
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id
+WHERE d.department_name = 'IT';
+
+-- INNER JOIN + GROUP BY
+SELECT d.department_name, COUNT(*)
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id
+GROUP BY d.department_name;
+
+-- INNER JOIN + HAVING
+SELECT d.department_name, COUNT(*)
+FROM employees_join e
+INNER JOIN departments d
+ON e.department_id = d.department_id
+GROUP BY d.department_name
+HAVING COUNT(*) > 1;
