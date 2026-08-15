@@ -1,0 +1,568 @@
+ Day 17
+ RIGHT JOIN + FULL OUTER JOIN
+⭐ Interview Importance: Very High
+Today we'll learn:
+RIGHT JOIN
+FULL OUTER JOIN
+INNER vs LEFT vs RIGHT vs FULL
+What happens with unmatched records
+SQLite-specific behavior
+Practice questions with answers
+Interview questions with answers
+
+1. First, understand the basic idea
+We already learned:
+INNER JOIN
+Give me only matching records.
+LEFT JOIN
+Give me everything from the left table, even if there is no match.
+Now:
+RIGHT JOIN
+Give me everything from the right table, even if there is no match.
+FULL OUTER JOIN
+Give me everything from both tables, whether there is a match or not.
+
+2. Our Tables
+We'll continue using:
+employees_join
+emp_id
+name
+salary
+department_id
+1
+Rahul
+50000
+101
+2
+Amit
+45000
+102
+3
+Neha
+70000
+101
+4
+Priya
+40000
+103
+5
+Vikas
+90000
+104
+6
+Rohit
+55000
+102
+7
+Karan
+60000
+999
+
+departments
+department_id
+department_name
+101
+IT
+102
+HR
+103
+Sales
+104
+Finance
+105
+Marketing
+
+Notice two important things:
+Karan:
+department_id = 999
+but department 999 doesn't exist.
+And:
+Marketing:
+department_id = 105
+but no employee belongs to department 105.
+These two unmatched records will help us understand today's joins.
+
+3. RIGHT JOIN
+What is RIGHT JOIN?
+A RIGHT JOIN returns:
+✅ All rows from the right table
+✅ Matching rows from the left table
+✅ NULL when there is no matching row
+Syntax:
+SELECT columns
+FROM table1
+RIGHT JOIN table2
+ON table1.column = table2.column;
+
+4. Simple Example
+Let's put employees_join on the left and departments on the right:
+SELECT
+   e.name,
+   d.department_name
+FROM employees_join e
+RIGHT JOIN departments d
+ON e.department_id = d.department_id;
+The important thing is:
+employees_join = LEFT
+departments    = RIGHT
+Therefore:
+Keep ALL departments.
+
+Expected result
+Employee
+Department
+Rahul
+IT
+Neha
+IT
+Amit
+HR
+Rohit
+HR
+Priya
+Sales
+Vikas
+Finance
+NULL
+Marketing
+
+Why is Marketing included?
+Because departments is the right table, and RIGHT JOIN keeps all rows from the right table.
+Marketing has no employee, so:
+Employee = NULL
+Department = Marketing
+
+⭐ Important Interview Concept
+Remember this:
+LEFT JOIN
+   ↓
+Keep everything from LEFT table
+
+RIGHT JOIN
+   ↓
+Keep everything from RIGHT table
+
+5. RIGHT JOIN in SQLite
+This is important for you because you're using SQLite.
+Modern SQLite versions support:
+RIGHT JOIN
+So this works in current SQLite:
+SELECT
+   e.name,
+   d.department_name
+FROM employees_join e
+RIGHT JOIN departments d
+ON e.department_id = d.department_id;
+However, if your SQLite extension/environment doesn't support RIGHT JOIN, you can simply reverse the tables and use LEFT JOIN.
+For example:
+SELECT
+   e.name,
+   d.department_name
+FROM departments d
+LEFT JOIN employees_join e
+ON d.department_id = e.department_id;
+This gives the same logical result.
+⭐ Remember this trick
+A RIGHT JOIN B
+
+is logically equivalent to
+
+B LEFT JOIN A
+This is extremely useful when working with databases that don't support RIGHT JOIN.
+
+6. Finding Departments With No Employees
+This is a very common interview question.
+We want:
+Marketing
+because Marketing has no employees.
+Using RIGHT JOIN:
+SELECT
+   d.department_name
+FROM employees_join e
+RIGHT JOIN departments d
+ON e.department_id = d.department_id
+WHERE e.emp_id IS NULL;
+Result:
+Marketing
+
+7. Same Question Using LEFT JOIN
+Because we can reverse the tables:
+SELECT
+   d.department_name
+FROM departments d
+LEFT JOIN employees_join e
+ON d.department_id = e.department_id
+WHERE e.emp_id IS NULL;
+Same answer:
+Marketing
+
+8. RIGHT JOIN vs LEFT JOIN
+Let's make it very simple.
+LEFT JOIN
+FROM employees e
+LEFT JOIN departments d
+Means:
+Keep all employees.
+So Karan appears.
+
+RIGHT JOIN
+FROM employees e
+RIGHT JOIN departments d
+Means:
+Keep all departments.
+So Marketing appears.
+
+9. FULL OUTER JOIN
+Now we reach one of the most important concepts.
+What is FULL OUTER JOIN?
+FULL OUTER JOIN returns:
+All matching and unmatched rows from both tables.
+So:
+LEFT JOIN
++
+RIGHT JOIN
+=
+FULL OUTER JOIN
+Conceptually.
+
+10. Example
+SELECT
+   e.name,
+   d.department_name
+FROM employees_join e
+FULL OUTER JOIN departments d
+ON e.department_id = d.department_id;
+The result includes:
+Matching employees
+Rahul → IT
+Amit → HR
+Neha → IT
+Priya → Sales
+Vikas → Finance
+Rohit → HR
+Unmatched employee
+Karan → NULL
+Unmatched department
+NULL → Marketing
+So conceptually:
+Employee
+Department
+Rahul
+IT
+Neha
+IT
+Amit
+HR
+Rohit
+HR
+Priya
+Sales
+Vikas
+Finance
+Karan
+NULL
+NULL
+Marketing
+
+
+11. FULL OUTER JOIN in SQLite
+Modern SQLite versions support:
+FULL OUTER JOIN
+So you can try:
+SELECT
+   e.name,
+   d.department_name
+FROM employees_join e
+FULL OUTER JOIN departments d
+ON e.department_id = d.department_id;
+But here's an important interview point:
+Older SQLite versions did not support FULL OUTER JOIN.
+The traditional SQLite solution is:
+SELECT
+   e.name,
+   d.department_name
+FROM employees_join e
+LEFT JOIN departments d
+ON e.department_id = d.department_id
+
+UNION
+
+SELECT
+   e.name,
+   d.department_name
+FROM departments d
+LEFT JOIN employees_join e
+ON d.department_id = e.department_id;
+This combines:
+LEFT JOIN
++
+reverse LEFT JOIN
+to simulate a FULL OUTER JOIN.
+
+12. Why UNION?
+Suppose the first query gives:
+All employees + matching departments
+and the second query gives:
+All departments + matching employees
+Some rows appear in both.
+UNION removes duplicates.
+Therefore we get the equivalent of:
+FULL OUTER JOIN
+
+13. Four JOINs — The Easy Way
+This is something I want you to memorize.
+JOIN
+What does it keep?
+INNER JOIN
+Matching rows only
+LEFT JOIN
+Everything from LEFT
+RIGHT JOIN
+Everything from RIGHT
+FULL OUTER JOIN
+Everything from BOTH
+
+Think:
+INNER
+ ↓
+Only common
+
+LEFT
+ ↓
+Everything on left
+
+RIGHT
+ ↓
+Everything on right
+
+FULL
+ ↓
+Everything everywhere
+
+14. Visual Understanding
+Imagine:
+Employees                Departments
+
+   A  ────────────  A
+   B  ────────────  B
+   C  ────────────  C
+   D  ────────────  D
+   E  ────────────  E
+
+   F                 ← unmatched employee
+
+                     G ← unmatched department
+INNER JOIN
+A B C D E
+LEFT JOIN
+A B C D E F
+RIGHT JOIN
+A B C D E G
+FULL OUTER JOIN
+A B C D E F G
+
+15. Practice Questions + Answers
+As you requested earlier, I'll continue giving the answer immediately for each question.
+
+Q1. Show all departments and their employees.
+SELECT
+   d.department_name,
+   e.name
+FROM departments d
+LEFT JOIN employees_join e
+ON d.department_id = e.department_id;
+Why LEFT JOIN?
+Because we want all departments, including Marketing.
+
+Q2. Find departments without employees.
+SELECT
+   d.department_name
+FROM departments d
+LEFT JOIN employees_join e
+ON d.department_id = e.department_id
+WHERE e.emp_id IS NULL;
+Answer:
+Marketing
+
+Q3. Show all employees, including employees without departments.
+SELECT
+   e.name,
+   d.department_name
+FROM employees_join e
+LEFT JOIN departments d
+ON e.department_id = d.department_id;
+Karan will appear with:
+NULL
+
+Q4. Find employees whose department doesn't exist.
+SELECT
+   e.name,
+   e.department_id
+FROM employees_join e
+LEFT JOIN departments d
+ON e.department_id = d.department_id
+WHERE d.department_id IS NULL;
+Result:
+name
+department_id
+Karan
+999
+
+
+Q5. Use RIGHT JOIN to show all departments.
+SELECT
+   e.name,
+   d.department_name
+FROM employees_join e
+RIGHT JOIN departments d
+ON e.department_id = d.department_id;
+
+Q6. Use RIGHT JOIN to find departments without employees.
+SELECT
+   d.department_name
+FROM employees_join e
+RIGHT JOIN departments d
+ON e.department_id = d.department_id
+WHERE e.emp_id IS NULL;
+Answer:
+Marketing
+
+Q7. Show all records from both tables.
+If your SQLite version supports FULL OUTER JOIN:
+SELECT
+   e.name,
+   d.department_name
+FROM employees_join e
+FULL OUTER JOIN departments d
+ON e.department_id = d.department_id;
+
+Q8. Simulate FULL OUTER JOIN in SQLite.
+SELECT
+   e.name,
+   d.department_name
+FROM employees_join e
+LEFT JOIN departments d
+ON e.department_id = d.department_id
+
+UNION
+
+SELECT
+   e.name,
+   d.department_name
+FROM departments d
+LEFT JOIN employees_join e
+ON d.department_id = e.department_id;
+
+Q9. Count employees in every department, including departments with zero employees.
+SELECT
+   d.department_name,
+   COUNT(e.emp_id) AS total_employees
+FROM departments d
+LEFT JOIN employees_join e
+ON d.department_id = e.department_id
+GROUP BY d.department_name;
+Marketing will show:
+Marketing | 0
+
+Q10. Find departments having at least one employee.
+SELECT
+   d.department_name,
+   COUNT(e.emp_id) AS total_employees
+FROM departments d
+LEFT JOIN employees_join e
+ON d.department_id = e.department_id
+GROUP BY d.department_name
+HAVING COUNT(e.emp_id) > 0;
+
+🧠 Interview Questions
+Q1. What is RIGHT JOIN?
+Answer:
+RIGHT JOIN returns all rows from the right table and matching rows from the left table. If no match exists, columns from the left table contain NULL.
+
+Q2. What is FULL OUTER JOIN?
+Answer:
+FULL OUTER JOIN returns all rows from both tables. Matching rows are combined, while unmatched rows contain NULLvalues for the other table.
+
+Q3. Difference between LEFT JOIN and RIGHT JOIN?
+Answer:
+The difference is which table's unmatched rows are preserved.
+LEFT JOIN  → preserves LEFT table
+RIGHT JOIN → preserves RIGHT table
+
+Q4. What does FULL OUTER JOIN return?
+Answer:
+It returns:
+Matching rows
++
+Unmatched rows from left
++
+Unmatched rows from right
+
+Q5. Does SQLite support RIGHT JOIN?
+Answer:
+Modern SQLite versions support RIGHT JOIN. If you're using an older SQLite version that doesn't, you can reverse the tables and use LEFT JOIN.
+
+Q6. Does SQLite support FULL OUTER JOIN?
+Answer:
+Modern SQLite versions support FULL OUTER JOIN. For older versions, it can be simulated using LEFT JOIN + UNION + a reversed LEFT JOIN.
+
+Q7. How can you simulate RIGHT JOIN using LEFT JOIN?
+Answer:
+Reverse the tables.
+Instead of:
+A RIGHT JOIN B
+use:
+B LEFT JOIN A
+
+Q8. How can you simulate FULL OUTER JOIN in older SQLite?
+Answer:
+Use two LEFT JOINs combined with UNION.
+SELECT ...
+FROM A
+LEFT JOIN B ...
+
+UNION
+
+SELECT ...
+FROM B
+LEFT JOIN A ...;
+
+🔥 Very Important Interview Question
+"Find departments that don't have any employees."
+This is a classic interview question.
+Best answer:
+SELECT
+   d.department_name
+FROM departments d
+LEFT JOIN employees_join e
+ON d.department_id = e.department_id
+WHERE e.emp_id IS NULL;
+
+📌 Your JOIN Cheat Sheet
+
+-- INNER
+SELECT *
+FROM A
+INNER JOIN B
+ON A.id = B.id;
+
+
+-- LEFT
+SELECT *
+FROM A
+LEFT JOIN B
+ON A.id = B.id;
+
+
+-- RIGHT
+SELECT *
+FROM A
+RIGHT JOIN B
+ON A.id = B.id;
+
+
+-- FULL
+SELECT *
+FROM A
+FULL OUTER JOIN B
+ON A.id = B.id;
